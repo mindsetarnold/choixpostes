@@ -161,7 +161,7 @@
     authDomain:        "choix-des-postes---promo-50.firebaseapp.com",
     databaseURL:       "https://choix-des-postes---promo-50-default-rtdb.europe-west1.firebasedatabase.app",
     projectId:         "choix-des-postes---promo-50",
-    storageBucket:     "VOTRE_PROJECT.appspot.com",
+    storageBucket:     "choix-des-postes---promo-50.firebasestorage.app",
     messagingSenderId: "473390550522",
     appId:             "1:473390550522:web:f35a07cc1a5ec3a58a6843"
   };
@@ -499,8 +499,9 @@ function showScreen(id) {
 function switchAdminTab(tabId, btn) {
   document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tabId).style.display = '';
+  document.getElementById(tabId).style.display = 'block';
   btn.classList.add('active');
+  if (tabId === 'tab-choices') renderChoicesTable();
 }
 
 async function tryAdmin() {
