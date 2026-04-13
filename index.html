@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Choix de postes — Promotion IRA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg:        #F4F2ED;
-    --surface:   #FDFCFA;
-    --surface2:  #EDEAE3;
-    --border:    rgba(60,50,30,0.13);
-    --border2:   rgba(60,50,30,0.22);
-    --text:      #1A1510;
-    --text2:     #6B6155;
-    --text3:     #9E9387;
-    --green:     #1A6B4A;
-    --green-bg:  #D6EDE3;
-    --green-lt:  #EBF6F0;
+    --bg:        #EEF4FB;
+    --surface:   #F8FAFD;
+    --surface2:  #DDE8F5;
+    --border:    rgba(30,60,120,0.11);
+    --border2:   rgba(30,60,120,0.20);
+    --text:      #111827;
+    --text2:     #4B6080;
+    --text3:     #8FA3BC;
+    --accent:    #1A5FA0;
+    --accent-bg: #D0E4F7;
+    --accent-lt: #EBF3FC;
     --blue:      #1A5FA0;
-    --blue-bg:   #D6E8F8;
+    --blue-bg:   #D0E4F7;
     --amber:     #8A5A0A;
     --amber-bg:  #FDF0D5;
     --red:       #8B2020;
@@ -33,38 +33,43 @@
   html { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
   body { min-height: 100vh; }
   .page { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
   .logo-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
   .logo { font-size: 13px; font-weight: 500; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-  .logo span { color: var(--green); }
+  .logo span { color: var(--accent); }
+
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
   .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
+
   .screen { display: none; }
   .screen.active { display: block; }
+
   .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
   .tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 18px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: color .15s, border-color .15s; margin-bottom: -1px; }
   .tab:hover { color: var(--text); }
-  .tab.active { color: var(--green); border-bottom-color: var(--green); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .admin-tab { display: none; }
+
   label { font-size: 12px; font-weight: 500; color: var(--text2); display: block; margin-bottom: 5px; letter-spacing: 0.02em; text-transform: uppercase; }
   input, select, textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius); padding: 9px 12px; color: var(--text); outline: none; transition: border-color .15s, box-shadow .15s; }
-  input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26,107,74,0.12); }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,95,160,0.12); }
   textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
-  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6155' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234B6080' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
   .field { margin-bottom: 12px; }
+
   .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius); padding: 0 18px; height: 38px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; border: 1px solid var(--border2); background: var(--surface2); color: var(--text); transition: background .15s, border-color .15s, transform .1s; }
-  .btn:hover { background: #E3E0D7; }
+  .btn:hover { background: #ccd9ee; }
   .btn:active { transform: scale(0.98); }
-  .btn-green { background: var(--green); border-color: var(--green); color: #fff; }
-  .btn-green:hover { background: #155c3e; }
-  .btn-blue  { background: var(--blue);  border-color: var(--blue);  color: #fff; }
+  .btn-green { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn-green:hover { background: #144d80; }
+  .btn-blue  { background: var(--blue); border-color: var(--blue); color: #fff; }
   .btn-blue:hover  { background: #144d80; }
   .btn-red   { background: var(--red-bg); border-color: #e0b0b0; color: var(--red); }
   .btn-red:hover   { background: #f5d5d5; }
   .btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
   .btn-lg { height: 46px; font-size: 15px; font-weight: 600; border-radius: var(--radius-lg); }
 
-  /* Stats — 2 colonnes seulement désormais */
   .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.5rem; }
   .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; }
   .stat-label { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
@@ -77,17 +82,17 @@
   th { text-align: left; padding: 9px 14px; font-size: 11px; font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em; background: var(--bg); }
   td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--green-lt); }
+  tr:hover td { background: var(--accent-lt); }
   .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; font-family: 'DM Mono', monospace; }
-  .badge-green { background: var(--green-bg); color: var(--green); }
-  .badge-gray  { background: var(--surface2); color: var(--text2); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); }
+  .badge-gray { background: var(--surface2); color: var(--text2); }
   .status { font-size: 12px; min-height: 18px; margin-top: 8px; font-weight: 500; }
-  .ok  { color: var(--green); }
+  .ok  { color: var(--accent); }
   .err { color: var(--red); }
 
+  /* ── Lock ── */
   .lock-wrap { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
   .lock-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; max-width: 380px; width: 100%; box-shadow: var(--shadow); }
-  .lock-icon { font-size: 32px; margin-bottom: 1rem; }
   .lock-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
   .lock-box p { font-size: 13px; color: var(--text2); margin-bottom: 1.2rem; }
   .pin-row { display: flex; gap: 8px; }
@@ -96,6 +101,18 @@
   .lock-divider::before, .lock-divider::after { content:''; flex:1; height:1px; background: var(--border2); }
   .lock-divider span { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
 
+  /* ── Photo de profil ── */
+  .profile-pic-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.4rem; }
+  .profile-pic { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border2); background: var(--surface2); display: block; }
+  .profile-pic-placeholder { width: 80px; height: 80px; border-radius: 50%; background: var(--surface2); border: 3px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 32px; }
+  .profile-pic-upload-label { font-size: 11px; color: var(--text3); margin-top: 7px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .profile-pic-upload-label:hover { color: var(--accent); }
+  #profile-pic-file { display: none; }
+  .student-header-pic { display: flex; justify-content: center; margin-bottom: 1.4rem; }
+  .student-header-pic .profile-pic,
+  .student-header-pic .profile-pic-placeholder { width: 64px; height: 64px; font-size: 26px; }
+
+  /* ── Vœux ── */
   .voeu-row { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
   .voeu-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text2); text-align: center; }
   .voeu-hint { font-size: 11px; color: var(--text3); margin: -6px 0 10px 46px; }
@@ -113,8 +130,9 @@
   .flex-between { display: flex; align-items: center; justify-content: space-between; }
   .flex-gap { display: flex; align-items: center; gap: 8px; }
   code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; }
-  .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .6s linear infinite; }
+  .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
   @media (max-width: 560px) {
     .stats { grid-template-columns: 1fr 1fr; }
     .page { padding: 1.5rem 1rem 3rem; }
@@ -146,11 +164,16 @@
     </div>
   </div>
 
-  <!-- LOCK -->
+  <!-- ══ ÉCRAN CONNEXION ══ -->
   <div id="screen-lock" class="screen active">
     <div class="lock-wrap">
       <div class="lock-box">
-        <div class="lock-icon">🎓</div>
+        <div class="profile-pic-wrap">
+          <div id="lock-pic-placeholder" class="profile-pic-placeholder">🎓</div>
+          <img id="lock-pic-img" class="profile-pic" style="display:none;" alt="Photo de profil" />
+          <label class="profile-pic-upload-label" for="profile-pic-file">Changer la photo</label>
+          <input type="file" id="profile-pic-file" accept="image/*" onchange="onProfilePicChange(event)" />
+        </div>
         <h2>Promotion IRA</h2>
         <p>Choisissez votre mode d'accès</p>
         <button class="btn btn-blue btn-lg" onclick="showScreen('screen-student')" style="width:100%;justify-content:center;margin-bottom:6px;">Accès élève</button>
@@ -166,7 +189,7 @@
     </div>
   </div>
 
-  <!-- ADMIN -->
+  <!-- ══ ÉCRAN ADMIN ══ -->
   <div id="screen-admin" class="screen">
     <div class="flex-between" style="margin-bottom:1.5rem;">
       <div>
@@ -205,7 +228,7 @@
     <div id="tab-posts" class="admin-tab">
       <div class="card">
         <div class="card-title">Importer des postes</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Un poste par ligne : <code>Nom du poste | Ministère</code>. L'ordre d'import est conservé. Les doublons de noms sont gérés automatiquement.</p>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Un poste par ligne : <code>Nom du poste | Ministère</code>. L'ordre d'import est conservé.</p>
         <div class="field"><textarea id="posts-bulk" placeholder="AC - Intérieur | Intérieur&#10;AC - Intérieur | Intérieur&#10;Préfecture du Rhône | Intérieur"></textarea></div>
         <div class="flex-gap">
           <button class="btn btn-green" onclick="importPosts()">Importer</button>
@@ -230,9 +253,7 @@
       <div class="table-wrap">
         <div class="table-head">
           <span class="table-head-title">Tous les vœux</span>
-          <div class="flex-gap">
-            <input type="text" id="adm-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderChoicesTable()" />
-          </div>
+          <input type="text" id="adm-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderChoicesTable()" />
         </div>
         <div id="choices-table"><div class="empty">Aucun vœu enregistré.</div></div>
       </div>
@@ -246,7 +267,7 @@
         <div class="card-title">Accès élèves</div>
         <div class="flex-gap">
           <label style="margin:0;font-size:14px;color:var(--text);text-transform:none;letter-spacing:0;" for="access-toggle">Autoriser les élèves à effectuer leurs vœux</label>
-          <input type="checkbox" id="access-toggle" style="width:auto;height:18px;accent-color:var(--green);" onchange="toggleAccess()" />
+          <input type="checkbox" id="access-toggle" style="width:auto;height:18px;accent-color:var(--accent);" onchange="toggleAccess()" />
         </div>
         <p style="font-size:12px;color:var(--text2);margin-top:8px;">Désactivez pendant l'import. Activez quand la promotion peut commencer.</p>
       </div>
@@ -267,7 +288,7 @@
     </div>
   </div>
 
-  <!-- ÉLÈVE -->
+  <!-- ══ ÉCRAN ÉLÈVE ══ -->
   <div id="screen-student" class="screen">
     <div class="flex-between" style="margin-bottom:4px;">
       <h1 style="font-size:22px;font-weight:600;">Choix de poste</h1>
@@ -278,7 +299,7 @@
     <div id="student-locked" style="display:none;">
       <div class="lock-wrap" style="min-height:40vh;">
         <div class="lock-box">
-          <div class="lock-icon">⏳</div>
+          <div class="profile-pic-placeholder" style="margin:0 auto 1rem;">⏳</div>
           <h2>Pas encore ouvert</h2>
           <p>L'accès n'est pas encore activé. Revenez dans quelques instants.</p>
           <button class="btn btn-sm" style="margin-top:8px;" onclick="refreshAll()">Actualiser</button>
@@ -287,6 +308,12 @@
     </div>
 
     <div id="student-ui">
+      <!-- Photo centrée -->
+      <div class="student-header-pic">
+        <div id="student-pic-placeholder" class="profile-pic-placeholder">🎓</div>
+        <img id="student-pic-img" class="profile-pic" style="display:none;" alt="" />
+      </div>
+
       <div class="stats">
         <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="st-voted">—</div></div>
         <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
@@ -300,6 +327,19 @@
             <option value="">— Choisir mon nom —</option>
           </select>
         </div>
+
+        <!-- PIN élève -->
+        <div id="pin-check-block" style="display:none;margin-bottom:14px;">
+          <label>Code PIN</label>
+          <div class="flex-gap">
+            <input type="password" id="student-pin-input" maxlength="4" placeholder="• • • •"
+              style="width:110px;font-family:'DM Mono',monospace;text-align:center;letter-spacing:4px;"
+              onkeydown="if(event.key==='Enter')checkStudentPin()" />
+            <button class="btn btn-green" onclick="checkStudentPin()">Valider</button>
+          </div>
+          <div class="status err" id="student-pin-err"></div>
+        </div>
+
         <div id="voeux-form" style="display:none;">
           <div class="alert-box alert-red"   id="alert-v1-evicted"    style="display:none;"></div>
           <div class="alert-box alert-amber" id="alert-other-evicted" style="display:none;"></div>
@@ -314,9 +354,7 @@
       <div class="table-wrap">
         <div class="table-head">
           <span class="table-head-title">Vœux de la promotion</span>
-          <div class="flex-gap">
-            <input type="text" id="st-search" placeholder="Rechercher…" style="width:160px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
-          </div>
+          <input type="text" id="st-search" placeholder="Rechercher…" style="width:160px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
         </div>
         <div id="student-choices-table"><div class="empty">Aucun vœu enregistré pour l'instant.</div></div>
       </div>
@@ -328,32 +366,42 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-let students   = [];
-let posts      = [];
-let choices    = [];
-let accessOpen = false;
-let db         = null;
+/* ════════════════════════════════════════
+   ÉTAT
+════════════════════════════════════════ */
+let students          = [];
+let posts             = [];
+let choices           = [];
+let accessOpen        = false;
+let db                = null;
+let authenticatedRank = null;
 
+/* ════════════════════════════════════════
+   FIREBASE / LOCAL
+════════════════════════════════════════ */
 function initFirebase() {
-  if (!FIREBASE_CONFIGURED) { loadLocalFallback(); return; }
+  if (!FIREBASE_CONFIGURED) { loadLocalFallback(); loadProfilePic(); return; }
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
     setSyncLabel('Connexion…', true);
     setupListeners();
+    loadProfilePic();
   } catch(e) { setSyncLabel('Erreur Firebase', false); }
 }
+
 function setSyncLabel(t, loading) {
   document.getElementById('sync-label').textContent = t;
   document.getElementById('sync-loader').style.display = loading ? '' : 'none';
 }
+
 function setupListeners() {
   ['students','posts','choices','settings'].forEach(path => {
     db.ref('ira/'+path).on('value', snap => {
       const v = snap.val();
-      if (path === 'students') students = v ? Object.values(v).sort((a,b)=>a.rank-b.rank) : [];
-      if (path === 'posts')    posts    = v ? Object.values(v).sort((a,b)=>(a.order||0)-(b.order||0)) : [];
-      if (path === 'choices')  choices  = v ? Object.values(v).sort((a,b)=>a.rank-b.rank) : [];
+      if (path === 'students') students = v ? Object.values(v).sort((a,b) => a.rank - b.rank) : [];
+      if (path === 'posts')    posts    = v ? Object.values(v).sort((a,b) => (a.order||0) - (b.order||0)) : [];
+      if (path === 'choices')  choices  = v ? Object.values(v).sort((a,b) => a.rank - b.rank) : [];
       if (path === 'settings') {
         accessOpen = v?.accessOpen === true;
         const tog = document.getElementById('access-toggle');
@@ -369,21 +417,68 @@ const LS = {
   get: k => { try { return JSON.parse(localStorage.getItem('ira_'+k)); } catch(e) { return null; } },
   set: (k,v) => localStorage.setItem('ira_'+k, JSON.stringify(v))
 };
+
 function loadLocalFallback() {
   students   = LS.get('students') || [];
-  posts      = (LS.get('posts')   || []).sort((a,b)=>(a.order||0)-(b.order||0));
+  posts      = (LS.get('posts')   || []).sort((a,b) => (a.order||0) - (b.order||0));
   choices    = LS.get('choices')  || [];
   accessOpen = LS.get('access')   === true;
-  const tog = document.getElementById('access-toggle');
+  const tog  = document.getElementById('access-toggle');
   if (tog) tog.checked = accessOpen;
   refreshAll();
 }
 
+/* ════════════════════════════════════════
+   PHOTO DE PROFIL
+════════════════════════════════════════ */
+function onProfilePicChange(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => saveProfilePic(e.target.result);
+  reader.readAsDataURL(file);
+}
+
+function saveProfilePic(dataUrl) {
+  localStorage.setItem('ira_profile_pic', dataUrl);
+  if (db) db.ref('ira/settings/profilePic').set(dataUrl);
+  applyProfilePic(dataUrl);
+}
+
+function applyProfilePic(dataUrl) {
+  if (!dataUrl) return;
+  const img1 = document.getElementById('lock-pic-img');
+  const ph1  = document.getElementById('lock-pic-placeholder');
+  if (img1) { img1.src = dataUrl; img1.style.display = ''; }
+  if (ph1)  ph1.style.display = 'none';
+  const img2 = document.getElementById('student-pic-img');
+  const ph2  = document.getElementById('student-pic-placeholder');
+  if (img2) { img2.src = dataUrl; img2.style.display = ''; }
+  if (ph2)  ph2.style.display = 'none';
+}
+
+function loadProfilePic() {
+  if (db) {
+    db.ref('ira/settings/profilePic').on('value', snap => {
+      const val = snap.val();
+      if (val) { applyProfilePic(val); localStorage.setItem('ira_profile_pic', val); }
+      else { const local = localStorage.getItem('ira_profile_pic'); if (local) applyProfilePic(local); }
+    });
+  } else {
+    const local = localStorage.getItem('ira_profile_pic');
+    if (local) applyProfilePic(local);
+  }
+}
+
+/* ════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════ */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (id === 'screen-student') refreshAll();
 }
+
 function switchAdminTab(tabId, btn) {
   document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -391,6 +486,7 @@ function switchAdminTab(tabId, btn) {
   btn.classList.add('active');
   if (tabId === 'tab-choices') renderChoicesTable();
 }
+
 async function tryAdmin() {
   const pin = document.getElementById('pin-input').value;
   let stored = 'admin2024';
@@ -406,26 +502,57 @@ async function tryAdmin() {
 }
 
 /* ════════════════════════════════════════
+   PIN ÉLÈVE
+════════════════════════════════════════ */
+function onStudentSelect() {
+  const rank = parseInt(document.getElementById('student-select').value);
+  authenticatedRank = null;
+  document.getElementById('voeux-form').style.display = 'none';
+  document.getElementById('pin-check-block').style.display = rank ? '' : 'none';
+  document.getElementById('student-pin-input').value = '';
+  document.getElementById('student-pin-err').textContent = '';
+}
+
+function checkStudentPin() {
+  const rank    = parseInt(document.getElementById('student-select').value);
+  const student = students.find(s => s.rank === rank);
+  if (!student) return;
+  const entered = document.getElementById('student-pin-input').value.trim();
+  if (!student.pin) {
+    authenticatedRank = rank;
+    document.getElementById('pin-check-block').style.display = 'none';
+    document.getElementById('voeux-form').style.display = '';
+    buildVoeuxForm(rank, true);
+    return;
+  }
+  if (entered === student.pin) {
+    authenticatedRank = rank;
+    document.getElementById('pin-check-block').style.display = 'none';
+    document.getElementById('voeux-form').style.display = '';
+    document.getElementById('student-pin-err').textContent = '';
+    buildVoeuxForm(rank, true);
+  } else {
+    document.getElementById('student-pin-err').textContent = 'PIN incorrect.';
+  }
+}
+
+/* ════════════════════════════════════════
    LOGIQUE MÉTIER
 ════════════════════════════════════════ */
-
-// Postes pris en V1 par des élèves de meilleur rang (rang < monRang)
 function takenV1ByBetter(rank) {
   const s = new Set();
   choices.forEach(c => { if (c.rank < rank && c.v1) s.add(c.v1); });
   return s;
 }
 
-// V1 d'un élève est-il évincé ?
 function isEvictedV1(choice) {
   if (!choice.v1) return false;
   return choices.some(c => c.rank < choice.rank && c.v1 === choice.v1);
 }
 
-// Vœux 2-5 d'un élève pris en V1 par un meilleur rang
 function evictedOtherVoeux(choice) {
   const blocked = takenV1ByBetter(choice.rank);
-  const warned = [];
+  const warned  = [];
   for (let i = 2; i <= NB_VOEUX; i++) {
     const vid = choice['v'+i];
     if (vid && blocked.has(vid)) warned.push({ num: i, postId: vid });
@@ -442,17 +569,23 @@ function postName(id) {
   return posts.find(p => p.id === id)?.name || '';
 }
 
-/*
-  Calcule le nombre de postes restants pour un nom donné.
-  "Restant" = total de postes portant ce nom MOINS le nombre de V1
-  (de meilleur rang que `rank`) qui pointent vers un poste de ce nom.
-  Utilisé pour les menus V2-V5.
-*/
+// Exemplaires restants pour V1 (en tenant compte des V1 des mieux classés)
 function remainingByName(name, rank) {
-  const total = posts.filter(p => p.name === name).length;
-  // Combien de V1 de meilleurs rangs pointent vers un poste de ce nom ?
+  const total      = posts.filter(p => p.name === name).length;
   const takenCount = choices.filter(c => c.rank < rank && c.v1 && postName(c.v1) === name).length;
   return Math.max(0, total - takenCount);
+}
+
+// Compteur de popularité V2-V5 pour un nom de poste (tous élèves confondus)
+function countVoeux2to5ByName(name) {
+  const ids = new Set(posts.filter(p => p.name === name).map(p => p.id));
+  let count = 0;
+  choices.forEach(c => {
+    for (let i = 2; i <= NB_VOEUX; i++) {
+      if (ids.has(c['v'+i])) count++;
+    }
+  });
+  return count;
 }
 
 /* ════════════════════════════════════════
@@ -463,15 +596,15 @@ function refreshAll() {
   renderPosts();
   renderStudentScreen();
   const rank = parseInt(document.getElementById('student-select').value);
-  if (rank) buildVoeuxForm(rank, false);
+  if (rank && rank === authenticatedRank) buildVoeuxForm(rank, false);
 }
 
 /* ════════════════════════════════════════
-   RENDER ADMIN
+   RENDER ADMIN — ÉLÈVES
 ════════════════════════════════════════ */
 function renderStudents() {
   document.getElementById('students-count').textContent = students.length;
-  const sel = document.getElementById('student-select');
+  const sel  = document.getElementById('student-select');
   const prev = sel.value;
   sel.innerHTML = '<option value="">— Choisir mon nom —</option>';
   students.forEach(s => {
@@ -480,13 +613,39 @@ function renderStudents() {
     sel.appendChild(o);
   });
   if (prev) sel.value = prev;
+
   const el = document.getElementById('students-table');
   if (!students.length) { el.innerHTML = '<div class="empty">Aucun élève enregistré.</div>'; return; }
-  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Nom</th><th></th></tr></thead><tbody>` +
-    students.map(s => `<tr><td><span class="badge badge-gray">${s.rank}</span></td><td>${esc(s.name)}</td><td><button class="del-btn" onclick="delStudent(${s.rank})">✕</button></td></tr>`).join('') +
+  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Nom</th><th>PIN</th><th></th></tr></thead><tbody>` +
+    students.map(s => `<tr>
+      <td><span class="badge badge-gray">${s.rank}</span></td>
+      <td>${esc(s.name)}</td>
+      <td>
+        <div class="flex-gap">
+          <input type="text" value="${esc(s.pin||'')}" maxlength="4" placeholder="—"
+            id="pin-${s.rank}"
+            style="width:70px;font-family:'DM Mono',monospace;text-align:center;letter-spacing:2px;" />
+          <button class="btn btn-sm" onclick="saveStudentPin(${s.rank})">OK</button>
+        </div>
+      </td>
+      <td><button class="del-btn" onclick="delStudent(${s.rank})">✕</button></td>
+    </tr>`).join('') +
     `</tbody></table>`;
 }
 
+async function saveStudentPin(rank) {
+  const val = document.getElementById('pin-'+rank)?.value.trim();
+  if (!/^\d{4}$/.test(val)) { alert('Le PIN doit contenir exactement 4 chiffres.'); return; }
+  const student = students.find(s => s.rank === rank);
+  if (!student) return;
+  student.pin = val;
+  if (db) await db.ref(`ira/students/${rank}`).update({ pin: val });
+  else LS.set('students', students);
+}
+
+/* ════════════════════════════════════════
+   RENDER ADMIN — POSTES
+════════════════════════════════════════ */
 function renderPosts() {
   document.getElementById('posts-count').textContent = posts.length;
   const el = document.getElementById('posts-table');
@@ -508,26 +667,19 @@ function renderStudentScreen() {
   const locked = document.getElementById('student-locked');
   const ui     = document.getElementById('student-ui');
   document.getElementById('st-update').textContent = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  if (!accessOpen) { locked.style.display=''; ui.style.display='none'; return; }
-  locked.style.display='none'; ui.style.display='';
+  if (!accessOpen) { locked.style.display = ''; ui.style.display = 'none'; return; }
+  locked.style.display = 'none'; ui.style.display = '';
   document.getElementById('st-voted').textContent = choices.length;
   renderStudentTable();
 }
 
-function onStudentSelect() {
-  const rank = parseInt(document.getElementById('student-select').value);
-  document.getElementById('voeux-form').style.display = rank ? '' : 'none';
-  if (rank) buildVoeuxForm(rank, true);
-}
-
 /* ════════════════════════════════════════
-   CONSTRUCTION DU FORMULAIRE DE VŒUX
+   FORMULAIRE DE VŒUX
 ════════════════════════════════════════ */
 function buildVoeuxForm(rank, resetSelects) {
   const myChoice = choices.find(c => c.rank === rank);
-  const blocked  = takenV1ByBetter(rank); // postIds interdits en V1
+  const blocked  = takenV1ByBetter(rank);
 
-  // Crée les lignes si première fois
   const container = document.getElementById('voeux-selects');
   if (!document.getElementById('post-select-1')) {
     let html = '';
@@ -543,44 +695,32 @@ function buildVoeuxForm(rank, resetSelects) {
     container.innerHTML = html;
   }
 
-  // Valeurs actuelles (avant rebuild)
   const current = {};
   for (let i = 1; i <= NB_VOEUX; i++) {
     current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
   }
-
-  // Valeurs à restaurer
   const toRestore = {};
   for (let i = 1; i <= NB_VOEUX; i++) {
     toRestore['v'+i] = resetSelects ? (myChoice?.['v'+i]||'') : current['v'+i];
   }
 
-  // IDs déjà sélectionnés dans d'autres vœux (pour exclusion inter-vœux)
-  // On calcule ça après rebuild à chaque changement via onVoeuChange
-
-  // Remplissage V1 : postes non bloqués par meilleur rang
-  fillSelect(1, rank, blocked, toRestore.v1, toRestore);
-
-  // Remplissage V2-V5 : avec exclusion des vœux déjà sélectionnés
-  for (let i = 2; i <= NB_VOEUX; i++) {
+  for (let i = 1; i <= NB_VOEUX; i++) {
     fillSelect(i, rank, blocked, toRestore['v'+i], toRestore);
   }
-
-  // Alertes
   updateAlerts(rank, myChoice, blocked);
 }
 
 /*
-  Remplit un menu déroulant de vœu.
-  - Pour V1 : exclut les postes bloqués par meilleur rang
-  - Pour V2-V5 : affiche tous les postes SAUF ceux déjà choisis dans les vœux précédents
-    ET affiche le décompte restant pour les postes en doublon de nom
+  V1  : postes individuels, filtrés (bloqués par meilleur rang exclus),
+        décompte "X dispo" pour les postes en doublon.
+  V2-V5 : une entrée par nom de poste (dédupliqué), aucune restriction de quota,
+           compteur "vœu choisi X fois" dès que ≥ 2 élèves ont ce vœu.
 */
 function fillSelect(voeuNum, rank, blocked, currentValue, allCurrentValues) {
   const sel = document.getElementById('post-select-'+voeuNum);
   if (!sel) return;
 
-  // IDs déjà sélectionnés dans les AUTRES vœux
+  // IDs déjà sélectionnés dans les autres vœux (exclusion inter-vœux)
   const otherSelected = new Set();
   for (let i = 1; i <= NB_VOEUX; i++) {
     if (i === voeuNum) continue;
@@ -591,97 +731,68 @@ function fillSelect(voeuNum, rank, blocked, currentValue, allCurrentValues) {
   sel.innerHTML = `<option value="">— Vœu ${voeuNum}${voeuNum===1?' (prioritaire)':' (optionnel)'} —</option>`;
 
   if (voeuNum === 1) {
-    // V1 : exclure postes bloqués par meilleur rang + postes déjà dans autres vœux
+    // Chaque exemplaire individuel, filtré
     posts.forEach(p => {
       if (blocked.has(p.id)) return;
       if (otherSelected.has(p.id)) return;
+      const total     = posts.filter(x => x.name === p.name).length;
+      const remaining = remainingByName(p.name, rank);
       const o = document.createElement('option');
       o.value = p.id;
-      o.textContent = p.name + (p.ministry ? ` (${p.ministry})` : '');
+      let label = p.name + (p.ministry ? ` (${p.ministry})` : '');
+      if (total > 1) label += ` — ${remaining} dispo`;
+      o.textContent = label;
       sel.appendChild(o);
     });
   } else {
-    // V2-V5 : regrouper par nom pour afficher le décompte restant
-    // On construit une map nom -> liste de postes (dans l'ordre)
-    const nameMap = new Map(); // nom -> [{id, ministry, order}]
-    posts.forEach(p => {
-      if (!nameMap.has(p.name)) nameMap.set(p.name, []);
-      nameMap.get(p.name).push(p);
-    });
-
-    // Pour chaque groupe de postes de même nom, on propose UN seul item dans le select
-    // qui représente "choisir ce type de poste"
-    // L'id sélectionné sera l'id du premier poste disponible du groupe
-    // (non bloqué en V1 par meilleur rang, et dont il reste des exemplaires)
+    // Une entrée par nom, sans restriction de quota
     const seenNames = new Set();
     posts.forEach(p => {
-      if (seenNames.has(p.name)) return; // déjà traité ce nom
+      if (seenNames.has(p.name)) return;
       seenNames.add(p.name);
 
-      const group = nameMap.get(p.name);
-      const remaining = remainingByName(p.name, rank);
+      const group = posts.filter(x => x.name === p.name);
+      // Exclure si un id du groupe est déjà dans un autre vœu de l'élève
+      if (group.some(gp => otherSelected.has(gp.id))) return;
 
-      // Trouve le premier poste du groupe non sélectionné dans un autre vœu
-      // et dont le "nom" a encore des exemplaires disponibles
-      // Pour V2-V5, on ne bloque pas même si pris en V1 par meilleur rang,
-      // mais on informe avec le décompte
-      const availableInGroup = group.filter(gp => !otherSelected.has(gp.id));
-      if (availableInGroup.length === 0) return; // tous les exemplaires de ce nom déjà dans d'autres vœux
-
-      // L'id représentatif = premier disponible du groupe
-      const repId = availableInGroup[0].id;
+      const repId      = group[0].id;
+      const popularity = countVoeux2to5ByName(p.name);
 
       const o = document.createElement('option');
       o.value = repId;
-
       let label = p.name + (p.ministry ? ` (${p.ministry})` : '');
-      if (group.length > 1) {
-        // Poste en doublon : afficher le nombre restant
-        label += ` — reste ${remaining} poste${remaining > 1 ? 's' : ''}`;
-      }
+      if (popularity > 1) label += ` — vœu choisi ${popularity} fois`;
       o.textContent = label;
       sel.appendChild(o);
     });
   }
 
-  // Restaure la valeur si elle est encore disponible
+  // Restaurer la valeur précédente
   if (currentValue) {
-    // Pour V2-V5, la valeur sauvegardée peut être un id d'un exemplaire du groupe,
-    // mais le select affiche maintenant l'id du "premier disponible" du groupe.
-    // On cherche si un item du select correspond au même nom de poste.
-    const savedPostName = postName(currentValue);
-    let found = false;
+    const savedName = postName(currentValue);
     for (const opt of sel.options) {
-      if (opt.value === currentValue) { sel.value = currentValue; found = true; break; }
-      // Même nom de poste → sélectionner cet option représentatif
-      if (opt.value && postName(opt.value) === savedPostName) { sel.value = opt.value; found = true; break; }
+      if (opt.value === currentValue) { sel.value = currentValue; break; }
+      if (opt.value && postName(opt.value) === savedName) { sel.value = opt.value; break; }
     }
   }
 }
 
-// Appelé à chaque changement de vœu pour mettre à jour les autres dropdowns
 function onVoeuChange() {
   const rank = parseInt(document.getElementById('student-select').value);
   if (!rank) return;
   const myChoice = choices.find(c => c.rank === rank);
   const blocked  = takenV1ByBetter(rank);
-
-  // Récupère les valeurs actuelles
-  const current = {};
+  const current  = {};
   for (let i = 1; i <= NB_VOEUX; i++) {
     current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
   }
-
-  // Rebuild tous les selects pour mettre à jour les exclusions
   for (let i = 1; i <= NB_VOEUX; i++) {
     fillSelect(i, rank, blocked, current['v'+i], current);
   }
-
   updateAlerts(rank, myChoice, blocked);
 }
 
 function updateAlerts(rank, myChoice, blocked) {
-  // Alerte V1 évincé
   const alertV1 = document.getElementById('alert-v1-evicted');
   if (myChoice && myChoice.v1 && blocked.has(myChoice.v1)) {
     const winner = winnerOf(myChoice.v1);
@@ -691,7 +802,6 @@ function updateAlerts(rank, myChoice, blocked) {
     alertV1.style.display = 'none';
   }
 
-  // Alerte V2-V5 pris en V1 par mieux classé
   const alertOther = document.getElementById('alert-other-evicted');
   if (myChoice) {
     const warned = evictedOtherVoeux(myChoice);
@@ -702,7 +812,7 @@ function updateAlerts(rank, myChoice, blocked) {
         return `Vœu ${w.num} — <strong>${esc(postName(w.postId))}</strong> : choisi en vœu 1 par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}). Il reste ${rem} poste${rem>1?'s':''} de ce type disponible${rem>1?'s':''}.`;
       });
       alertOther.style.display = '';
-      alertOther.innerHTML = `⚠️ Les postes suivants ont été sélectionnés en vœu 1 par un élève mieux classé. Il peut rester des exemplaires disponibles du même poste :<br><br>` + lines.join('<br>');
+      alertOther.innerHTML = `⚠️ Les postes suivants ont été sélectionnés en vœu 1 par un élève mieux classé. Il peut rester des exemplaires disponibles :<br><br>` + lines.join('<br>');
     } else {
       alertOther.style.display = 'none';
     }
@@ -715,20 +825,24 @@ function updateAlerts(rank, myChoice, blocked) {
    SOUMISSION
 ════════════════════════════════════════ */
 async function submitChoice() {
-  const rank = parseInt(document.getElementById('student-select').value);
+  const rank   = parseInt(document.getElementById('student-select').value);
   const status = document.getElementById('student-status');
-  if (!rank) { status.textContent='Sélectionnez votre nom.'; status.className='status err'; return; }
+
+  if (rank !== authenticatedRank) {
+    status.textContent = 'Authentification requise.'; status.className = 'status err'; return;
+  }
+  if (!rank) { status.textContent = 'Sélectionnez votre nom.'; status.className = 'status err'; return; }
   const v1 = document.getElementById('post-select-1').value;
-  if (!v1) { status.textContent='Le vœu 1 est obligatoire.'; status.className='status err'; return; }
+  if (!v1) { status.textContent = 'Le vœu 1 est obligatoire.'; status.className = 'status err'; return; }
 
   const blocked = takenV1ByBetter(rank);
   if (blocked.has(v1)) {
-    status.textContent='Ce poste vient d\'être pris. Veuillez en choisir un autre.';
-    status.className='status err';
+    status.textContent = 'Ce poste vient d\'être pris. Veuillez en choisir un autre.';
+    status.className = 'status err';
     buildVoeuxForm(rank, false); return;
   }
 
-  const student = students.find(s=>s.rank===rank);
+  const student = students.find(s => s.rank === rank);
   if (!student) return;
 
   const entry = { rank, name: student.name, ts: Date.now() };
@@ -737,41 +851,41 @@ async function submitChoice() {
   if (db) {
     await db.ref(`ira/choices/${rank}`).set(entry);
   } else {
-    const idx = choices.findIndex(c=>c.rank===rank);
-    if (idx>=0) choices[idx]=entry; else choices.push(entry);
-    choices.sort((a,b)=>a.rank-b.rank);
-    LS.set('choices',choices); refreshAll();
+    const idx = choices.findIndex(c => c.rank === rank);
+    if (idx >= 0) choices[idx] = entry; else choices.push(entry);
+    choices.sort((a,b) => a.rank - b.rank);
+    LS.set('choices', choices); refreshAll();
   }
-  status.textContent='Vœux enregistrés !'; status.className='status ok';
-  setTimeout(()=>{ status.textContent=''; }, 3000);
+  status.textContent = 'Vœux enregistrés !'; status.className = 'status ok';
+  setTimeout(() => { status.textContent = ''; }, 3000);
 }
 
 /* ════════════════════════════════════════
    TABLES
 ════════════════════════════════════════ */
 function renderStudentTable() {
-  const q = (document.getElementById('st-search').value||'').toLowerCase();
+  const q      = (document.getElementById('st-search').value||'').toLowerCase();
   const myRank = parseInt(document.getElementById('student-select').value)||0;
   const filtered = choices.filter(c => {
     if (!q) return true;
-    const p1 = posts.find(p=>p.id===c.v1);
-    return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
+    const p1 = posts.find(p => p.id === c.v1);
+    return c.name.toLowerCase().includes(q) || (p1 && p1.name.toLowerCase().includes(q));
   });
   const el = document.getElementById('student-choices-table');
-  if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
-  const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th>Vœu ${i+1}</th>`).join('');
+  if (!filtered.length) { el.innerHTML = '<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
+  const vHeaders = [...Array(NB_VOEUX)].map((_,i) => `<th>Vœu ${i+1}</th>`).join('');
   const rows = filtered.map(c => {
-    const isMe = c.rank === myRank;
-    const evV1 = isEvictedV1(c);
-    const otherEv = new Set(evictedOtherVoeux(c).map(w=>w.num));
-    const cells = [...Array(NB_VOEUX)].map((_,i) => {
+    const isMe    = c.rank === myRank;
+    const evV1    = isEvictedV1(c);
+    const otherEv = new Set(evictedOtherVoeux(c).map(w => w.num));
+    const cells   = [...Array(NB_VOEUX)].map((_,i) => {
       const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
-      if (n===1&&evV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1&&otherEv.has(n))  return `<td>${pn} <span class="evicted-warn">(⚠ pris en V1)</span></td>`;
+      if (n===1 && evV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
+      if (n>1   && otherEv.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠ pris en V1)</span></td>`;
       return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
     }).join('');
-    return `<tr style="${isMe?'background:var(--green-lt);':''}">
-      <td><span class="badge badge-gray">${c.rank}</span>${isMe?'&nbsp;<span style="font-size:10px;color:var(--green);">moi</span>':''}</td>
+    return `<tr style="${isMe?'background:var(--accent-lt);':''}">
+      <td><span class="badge badge-gray">${c.rank}</span>${isMe?'&nbsp;<span style="font-size:10px;color:var(--accent);">moi</span>':''}</td>
       <td style="${isMe?'font-weight:600;':''}">${esc(c.name)}</td>
       ${cells}
     </tr>`;
@@ -783,21 +897,21 @@ function renderChoicesTable() {
   const q = (document.getElementById('adm-search')?.value||'').toLowerCase();
   const filtered = choices.filter(c => {
     if (!q) return true;
-    const p1=posts.find(p=>p.id===c.v1);
-    return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
+    const p1 = posts.find(p => p.id === c.v1);
+    return c.name.toLowerCase().includes(q) || (p1 && p1.name.toLowerCase().includes(q));
   });
   const el = document.getElementById('choices-table'); if (!el) return;
   document.getElementById('adm-voted').textContent   = choices.length;
-  document.getElementById('adm-waiting').textContent = Math.max(0, students.length-choices.length);
-  if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré.</div>'; return; }
-  const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th>V${i+1}</th>`).join('');
+  document.getElementById('adm-waiting').textContent = Math.max(0, students.length - choices.length);
+  if (!filtered.length) { el.innerHTML = '<div class="empty">Aucun vœu enregistré.</div>'; return; }
+  const vHeaders = [...Array(NB_VOEUX)].map((_,i) => `<th>V${i+1}</th>`).join('');
   const rows = filtered.map(c => {
-    const evV1 = isEvictedV1(c);
-    const otherEv = new Set(evictedOtherVoeux(c).map(w=>w.num));
-    const cells = [...Array(NB_VOEUX)].map((_,i) => {
+    const evV1    = isEvictedV1(c);
+    const otherEv = new Set(evictedOtherVoeux(c).map(w => w.num));
+    const cells   = [...Array(NB_VOEUX)].map((_,i) => {
       const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
-      if (n===1&&evV1)         return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1&&otherEv.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠V1)</span></td>`;
+      if (n===1 && evV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
+      if (n>1   && otherEv.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠V1)</span></td>`;
       return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
     }).join('');
     return `<tr>
@@ -815,76 +929,80 @@ function renderChoicesTable() {
    ACTIONS ADMIN
 ════════════════════════════════════════ */
 async function importStudents() {
-  const lines = document.getElementById('students-bulk').value.trim().split('\n').filter(l=>l.trim());
+  const lines = document.getElementById('students-bulk').value.trim().split('\n').filter(l => l.trim());
   const toImport = [];
   for (const line of lines) {
-    const parts=line.split(';'); if(parts.length<2)continue;
-    const rank=parseInt(parts[0].trim()), name=parts.slice(1).join(';').trim();
-    if(!rank||!name)continue; toImport.push({rank,name});
+    const parts = line.split(';'); if (parts.length < 2) continue;
+    const rank = parseInt(parts[0].trim()), name = parts.slice(1).join(';').trim();
+    if (!rank || !name) continue; toImport.push({rank, name});
   }
-  if(!toImport.length){setStatus('students-status','Format invalide.','err');return;}
-  if(db){const u={};toImport.forEach(s=>{u[`ira/students/${s.rank}`]=s;});await db.ref().update(u);}
-  else{toImport.forEach(ns=>{const i=students.findIndex(s=>s.rank===ns.rank);if(i>=0)students[i]=ns;else students.push(ns);});students.sort((a,b)=>a.rank-b.rank);LS.set('students',students);renderStudents();}
-  document.getElementById('students-bulk').value='';
-  setStatus('students-status',`${toImport.length} élève(s) importé(s).`,'ok');
+  if (!toImport.length) { setStatus('students-status','Format invalide.','err'); return; }
+  if (db) { const u={}; toImport.forEach(s => { u[`ira/students/${s.rank}`]=s; }); await db.ref().update(u); }
+  else { toImport.forEach(ns => { const i=students.findIndex(s=>s.rank===ns.rank); if(i>=0)students[i]=ns; else students.push(ns); }); students.sort((a,b)=>a.rank-b.rank); LS.set('students',students); renderStudents(); }
+  document.getElementById('students-bulk').value = '';
+  setStatus('students-status', `${toImport.length} élève(s) importé(s).`, 'ok');
 }
 
 async function importPosts() {
-  const lines = document.getElementById('posts-bulk').value.trim().split('\n').filter(l=>l.trim());
+  const lines = document.getElementById('posts-bulk').value.trim().split('\n').filter(l => l.trim());
   const toImport = [];
-  const maxOrder = posts.length ? Math.max(...posts.map(p=>p.order||0)) : 0;
-  lines.forEach((line,idx)=>{
-    const parts=line.split('|'), name=parts[0].trim();
-    if(!name)return;
-    toImport.push({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), name, ministry:parts[1]?.trim()||'', order:maxOrder+idx+1});
+  const maxOrder = posts.length ? Math.max(...posts.map(p => p.order||0)) : 0;
+  lines.forEach((line,idx) => {
+    const parts = line.split('|'), name = parts[0].trim();
+    if (!name) return;
+    toImport.push({ id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), name, ministry: parts[1]?.trim()||'', order: maxOrder+idx+1 });
   });
-  if(!toImport.length){setStatus('posts-status','Aucun poste valide.','err');return;}
-  if(db){const u={};toImport.forEach(p=>{u[`ira/posts/${p.id}`]=p;});await db.ref().update(u);}
-  else{posts=[...posts,...toImport].sort((a,b)=>(a.order||0)-(b.order||0));LS.set('posts',posts);renderPosts();}
-  document.getElementById('posts-bulk').value='';
-  setStatus('posts-status',`${toImport.length} poste(s) importé(s).`,'ok');
+  if (!toImport.length) { setStatus('posts-status','Aucun poste valide.','err'); return; }
+  if (db) { const u={}; toImport.forEach(p => { u[`ira/posts/${p.id}`]=p; }); await db.ref().update(u); }
+  else { posts=[...posts,...toImport].sort((a,b)=>(a.order||0)-(b.order||0)); LS.set('posts',posts); renderPosts(); }
+  document.getElementById('posts-bulk').value = '';
+  setStatus('posts-status', `${toImport.length} poste(s) importé(s).`, 'ok');
 }
 
-async function clearStudents(){if(!confirm('Effacer tous les élèves ?'))return;if(db)await db.ref('ira/students').remove();else{students=[];LS.set('students',[]);renderStudents();}}
-async function clearPosts()   {if(!confirm('Effacer tous les postes ?'))return; if(db)await db.ref('ira/posts').remove();   else{posts=[];LS.set('posts',[]);renderPosts();}}
-async function delStudent(rank){if(db)await db.ref(`ira/students/${rank}`).remove();else{students=students.filter(s=>s.rank!==rank);LS.set('students',students);renderStudents();}}
-async function delPost(id)    {if(db)await db.ref(`ira/posts/${id}`).remove();     else{posts=posts.filter(p=>p.id!==id);LS.set('posts',posts);renderPosts();}}
-async function delChoice(rank){if(!confirm('Supprimer les vœux de cet élève ?'))return;if(db)await db.ref(`ira/choices/${rank}`).remove();else{choices=choices.filter(c=>c.rank!==rank);LS.set('choices',choices);refreshAll();}}
-async function resetChoices() {if(!confirm('Réinitialiser TOUS les vœux ?'))return;if(db)await db.ref('ira/choices').remove();else{choices=[];LS.set('choices',[]);refreshAll();}}
+async function clearStudents() { if (!confirm('Effacer tous les élèves ?'))  return; if(db) await db.ref('ira/students').remove(); else { students=[]; LS.set('students',[]); renderStudents(); } }
+async function clearPosts()    { if (!confirm('Effacer tous les postes ?'))   return; if(db) await db.ref('ira/posts').remove();    else { posts=[];    LS.set('posts',[]);    renderPosts(); } }
+async function delStudent(rank){ if(db) await db.ref(`ira/students/${rank}`).remove(); else { students=students.filter(s=>s.rank!==rank); LS.set('students',students); renderStudents(); } }
+async function delPost(id)     { if(db) await db.ref(`ira/posts/${id}`).remove();      else { posts=posts.filter(p=>p.id!==id); LS.set('posts',posts); renderPosts(); } }
+async function delChoice(rank) { if (!confirm('Supprimer les vœux de cet élève ?')) return; if(db) await db.ref(`ira/choices/${rank}`).remove(); else { choices=choices.filter(c=>c.rank!==rank); LS.set('choices',choices); refreshAll(); } }
+async function resetChoices()  { if (!confirm('Réinitialiser TOUS les vœux ?'))     return; if(db) await db.ref('ira/choices').remove();          else { choices=[]; LS.set('choices',[]); refreshAll(); } }
 
-async function toggleAccess(){
-  const val=document.getElementById('access-toggle').checked;
-  if(db)await db.ref('ira/settings/accessOpen').set(val);
-  else{accessOpen=val;LS.set('access',val);renderStudentScreen();}
+async function toggleAccess() {
+  const val = document.getElementById('access-toggle').checked;
+  if (db) await db.ref('ira/settings/accessOpen').set(val);
+  else { accessOpen=val; LS.set('access',val); renderStudentScreen(); }
 }
-async function changePin(){
-  const p1=document.getElementById('new-pin').value,p2=document.getElementById('confirm-pin').value;
-  if(!p1){setStatus('pin-change-status','Entrez un code.','err');return;}
-  if(p1!==p2){setStatus('pin-change-status','Les codes ne correspondent pas.','err');return;}
-  if(db)await db.ref('ira/settings/pin').set(p1);else LS.set('pin',p1);
-  document.getElementById('new-pin').value='';document.getElementById('confirm-pin').value='';
+
+async function changePin() {
+  const p1=document.getElementById('new-pin').value, p2=document.getElementById('confirm-pin').value;
+  if (!p1) { setStatus('pin-change-status','Entrez un code.','err'); return; }
+  if (p1 !== p2) { setStatus('pin-change-status','Les codes ne correspondent pas.','err'); return; }
+  if (db) await db.ref('ira/settings/pin').set(p1); else LS.set('pin',p1);
+  document.getElementById('new-pin').value = ''; document.getElementById('confirm-pin').value = '';
   setStatus('pin-change-status','Code modifié.','ok');
 }
 
-function exportCSV(){
-  const headers=['Rang','Élève',...[...Array(NB_VOEUX)].map((_,i)=>`Vœu ${i+1}`),'V1 évincé','Heure'];
-  const rows=[headers];
-  choices.forEach(c=>{
-    const voeux=[...Array(NB_VOEUX)].map((_,i)=>postName(c['v'+(i+1)])||'');
-    rows.push([c.rank,c.name,...voeux,isEvictedV1(c)?'Oui':'Non',new Date(c.ts).toLocaleString('fr-FR')]);
+function exportCSV() {
+  const headers = ['Rang','Élève',...[...Array(NB_VOEUX)].map((_,i)=>`Vœu ${i+1}`),'V1 évincé','Heure'];
+  const rows    = [headers];
+  choices.forEach(c => {
+    const voeux = [...Array(NB_VOEUX)].map((_,i) => postName(c['v'+(i+1)])||'');
+    rows.push([c.rank, c.name, ...voeux, isEvictedV1(c)?'Oui':'Non', new Date(c.ts).toLocaleString('fr-FR')]);
   });
-  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
-  a.download='voeux-postes-IRA.csv';a.click();
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a   = document.createElement('a');
+  a.href     = 'data:text/csv;charset=utf-8,' + encodeURIComponent('\uFEFF'+csv);
+  a.download = 'voeux-postes-IRA.csv'; a.click();
 }
 
-function setStatus(id,msg,cls){
-  const el=document.getElementById(id);if(!el)return;
-  el.textContent=msg;el.className='status '+cls;
-  setTimeout(()=>{el.textContent='';},4000);
+/* ════════════════════════════════════════
+   UTILITAIRES
+════════════════════════════════════════ */
+function setStatus(id, msg, cls) {
+  const el = document.getElementById(id); if (!el) return;
+  el.textContent = msg; el.className = 'status ' + cls;
+  setTimeout(() => { el.textContent = ''; }, 4000);
 }
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 initFirebase();
 </script>
