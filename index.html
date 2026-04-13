@@ -2,777 +2,206 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Choix de postes — Promotion IRA</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Choix de postes</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg:        #F4F2ED;
-    --surface:   #FDFCFA;
-    --surface2:  #EDEAE3;
-    --border:    rgba(60,50,30,0.13);
-    --border2:   rgba(60,50,30,0.22);
-    --text:      #1A1510;
-    --text2:     #6B6155;
-    --text3:     #9E9387;
-    --green:     #1A6B4A;
-    --green-bg:  #D6EDE3;
-    --green-lt:  #EBF6F0;
-    --blue:      #1A5FA0;
-    --blue-bg:   #D6E8F8;
-    --blue-lt:   #EBF3FC;
-    --amber:     #8A5A0A;
-    --amber-bg:  #FDF0D5;
-    --red:       #8B2020;
-    --red-bg:    #FAEAEA;
-    --radius:    10px;
-    --radius-lg: 14px;
-    --shadow:    0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
-  }
-  html { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
-  body { min-height: 100vh; }
-  .page { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
-  .logo-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
-  .logo { font-size: 13px; font-weight: 500; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-  .logo span { color: var(--green); }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
-  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
-  .screen { display: none; }
-  .screen.active { display: block; }
-  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
-  .tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 18px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: color .15s, border-color .15s; margin-bottom: -1px; }
-  .tab:hover { color: var(--text); }
-  .tab.active { color: var(--green); border-bottom-color: var(--green); }
-  .admin-tab { display: none; }
-  label { font-size: 12px; font-weight: 500; color: var(--text2); display: block; margin-bottom: 5px; letter-spacing: 0.02em; text-transform: uppercase; }
-  input, select, textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius); padding: 9px 12px; color: var(--text); outline: none; transition: border-color .15s, box-shadow .15s; }
-  input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26,107,74,0.12); }
-  textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
-  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6155' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-  .field { margin-bottom: 12px; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; border-radius: var(--radius); padding: 0 18px; height: 38px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; border: 1px solid var(--border2); background: var(--surface2); color: var(--text); transition: background .15s, border-color .15s, transform .1s; }
-  .btn:hover { background: #E3E0D7; }
-  .btn:active { transform: scale(0.98); }
-  .btn-green { background: var(--green); border-color: var(--green); color: #fff; }
-  .btn-green:hover { background: #155c3e; }
-  .btn-blue  { background: var(--blue);  border-color: var(--blue);  color: #fff; }
-  .btn-blue:hover  { background: #144d80; }
-  .btn-red   { background: var(--red-bg); border-color: #e0b0b0; color: var(--red); }
-  .btn-red:hover   { background: #f5d5d5; }
-  .btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
-  .btn-lg { height: 46px; font-size: 15px; font-weight: 600; border-radius: var(--radius-lg); }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; }
-  .stat-label { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .stat-value { font-size: 26px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
-  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 1rem; }
-  .table-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
-  .table-head-title { font-size: 13px; font-weight: 600; color: var(--text); }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 9px 14px; font-size: 11px; font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.05em; background: var(--bg); }
-  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--green-lt); }
-  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; font-family: 'DM Mono', monospace; }
-  .badge-green  { background: var(--green-bg); color: var(--green); }
-  .badge-gray   { background: var(--surface2); color: var(--text2); }
-  .badge-amber  { background: var(--amber-bg); color: var(--amber); }
-  .badge-red    { background: var(--red-bg);   color: var(--red);   }
-  .badge-blue   { background: var(--blue-bg);  color: var(--blue);  }
-  .status { font-size: 12px; min-height: 18px; margin-top: 8px; font-weight: 500; }
-  .ok  { color: var(--green); }
-  .err { color: var(--red); }
+body { font-family: DM Sans, sans-serif; margin:0; background:#f4f2ed; color:#1a1510; }
+.page { max-width:900px; margin:auto; padding:20px; }
 
-  /* Lock screen */
-  .lock-wrap { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
-  .lock-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; max-width: 380px; width: 100%; box-shadow: var(--shadow); }
-  .lock-icon { font-size: 32px; margin-bottom: 1rem; }
-  .lock-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-  .lock-box p { font-size: 13px; color: var(--text2); margin-bottom: 1.2rem; }
-  .pin-row { display: flex; gap: 8px; }
-  .pin-row input { text-align: center; letter-spacing: 3px; font-family: 'DM Mono', monospace; }
-  .lock-divider { display: flex; align-items: center; gap: 10px; margin: 1.4rem 0; }
-  .lock-divider::before, .lock-divider::after { content:''; flex:1; height:1px; background: var(--border2); }
-  .lock-divider span { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.card { background:white; padding:16px; border-radius:12px; margin-bottom:12px; }
+h1 { font-size:20px; }
 
-  /* Voeux form */
-  .voeu-row { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
-  .voeu-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text2); text-align: center; }
-  .voeu-hint { font-size: 11px; color: var(--text3); margin: -6px 0 10px 46px; }
+select, button {
+  padding:8px;
+  margin:5px 0;
+  width:100%;
+}
 
-  /* Alert boxes */
-  .alert-box { border-radius: var(--radius); padding: 12px 16px; font-size: 13px; font-weight: 500; margin-bottom: 12px; }
-  .alert-red    { background: var(--red-bg);   border: 1px solid #e0b0b0; color: var(--red); }
-  .alert-amber  { background: var(--amber-bg); border: 1px solid #e8c87a; color: var(--amber); }
+button { cursor:pointer; }
+.row { display:grid; grid-template-columns:40px 1fr; gap:10px; align-items:center; margin-bottom:8px; }
 
-  /* Eviction in table */
-  .evicted-v1   { color: var(--red);   font-weight: 600; }
-  .evicted-warn { color: var(--amber); font-weight: 500; font-size: 11px; }
+.badge { font-size:12px; padding:2px 6px; background:#ddd; border-radius:6px; }
+.alert { background:#ffe5e5; padding:10px; margin:10px 0; border-radius:8px; color:#8b2020; }
 
-  .empty { text-align: center; padding: 2.5rem; color: var(--text3); font-size: 13px; }
-  .del-btn { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 3px 7px; border-radius: 6px; font-family: 'DM Sans', sans-serif; }
-  .del-btn:hover { color: var(--red); background: var(--red-bg); }
-  .flex-between { display: flex; align-items: center; justify-content: space-between; }
-  .flex-gap { display: flex; align-items: center; gap: 8px; }
-  code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; }
-  .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .6s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 560px) {
-    .stats { grid-template-columns: 1fr 1fr; }
-    .stats .stat:last-child { grid-column: span 2; }
-    .page { padding: 1.5rem 1rem 3rem; }
-  }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+td, th { border-bottom:1px solid #ddd; padding:6px; font-size:13px; }
 </style>
 </head>
+
 <body>
 
-<script>
-  const FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyDIJaeq6CcP9tLOfBdUtlpmW4g02ART6Rc",
-    authDomain:        "choix-des-postes---promo-50.firebaseapp.com",
-    databaseURL:       "https://choix-des-postes---promo-50-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId:         "choix-des-postes---promo-50",
-    storageBucket:     "choix-des-postes---promo-50.firebasestorage.app",
-    messagingSenderId: "473390550522",
-    appId:             "1:473390550522:web:f35a07cc1a5ec3a58a6843"
-  };
-  const FIREBASE_CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith('VOTRE');
-  const NB_VOEUX = 5;
-</script>
-
 <div class="page">
-  <div class="logo-bar">
-    <div class="logo">IRA — <span>Choix de postes</span></div>
-    <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;">
-      <span class="loader" id="sync-loader" style="display:none;"></span>
-      <span id="sync-label">—</span>
-    </div>
-  </div>
 
-  <!-- ══ SCREEN : LOCK ══ -->
-  <div id="screen-lock" class="screen active">
-    <div class="lock-wrap">
-      <div class="lock-box">
-        <div class="lock-icon">🎓</div>
-        <h2>Promotion IRA</h2>
-        <p>Choisissez votre mode d'accès</p>
+<h1>Choix de postes</h1>
 
-        <!-- Bouton élève en premier, mis en valeur -->
-        <button class="btn btn-blue btn-lg" onclick="showScreen('screen-student')" style="width:100%;justify-content:center;margin-bottom:6px;">
-          Accès élève
-        </button>
-        <p style="font-size:11px;color:var(--text3);margin-bottom:0;">Consultez et enregistrez vos vœux de postes</p>
+<div class="card">
+  <label>Élève</label>
+  <select id="student" onchange="loadForm()"></select>
 
-        <div class="lock-divider"><span>Administration</span></div>
+  <div id="form"></div>
+  <button onclick="save()">Enregistrer</button>
+  <div id="status"></div>
+</div>
 
-        <p style="font-size:13px;color:var(--text2);margin-bottom:10px;">Entrez le code admin pour gérer les données.</p>
-        <div class="pin-row">
-          <input type="password" id="pin-input" placeholder="Code admin" maxlength="30" onkeydown="if(event.key==='Enter')tryAdmin()" />
-          <button class="btn btn-green" onclick="tryAdmin()">Entrer</button>
-        </div>
-        <div class="status err" id="pin-err"></div>
-      </div>
-    </div>
-  </div>
+<div class="card">
+  <h3>Vœux</h3>
+  <table id="table"></table>
+</div>
 
-  <!-- ══ SCREEN : ADMIN ══ -->
-  <div id="screen-admin" class="screen">
-    <div class="flex-between" style="margin-bottom:1.5rem;">
-      <div>
-        <h1 style="font-size:22px;font-weight:600;">Administration</h1>
-        <p style="font-size:13px;color:var(--text2);margin-top:2px;">Gérez les élèves, les postes et suivez les vœux en temps réel.</p>
-      </div>
-      <button class="btn btn-sm" onclick="showScreen('screen-lock')">Verrouiller</button>
-    </div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchAdminTab('tab-students',this)">Élèves</button>
-      <button class="tab" onclick="switchAdminTab('tab-posts',this)">Postes</button>
-      <button class="tab" onclick="switchAdminTab('tab-choices',this)">Suivi des vœux</button>
-      <button class="tab" onclick="switchAdminTab('tab-settings',this)">Paramètres</button>
-    </div>
-
-    <div id="tab-students" class="admin-tab" style="display:block;">
-      <div class="card">
-        <div class="card-title">Importer des élèves</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Un élève par ligne : <code>rang;Prénom Nom</code> — ex : <code>1;Marie Dupont</code></p>
-        <div class="field"><textarea id="students-bulk" placeholder="1;Marie Dupont&#10;2;Jean Martin&#10;3;Sophie Bernard"></textarea></div>
-        <div class="flex-gap">
-          <button class="btn btn-green" onclick="importStudents()">Importer</button>
-          <button class="btn btn-red btn-sm" onclick="clearStudents()">Tout effacer</button>
-        </div>
-        <div class="status" id="students-status"></div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-head-title">Élèves enregistrés</span>
-          <span class="badge badge-gray" id="students-count">0</span>
-        </div>
-        <div id="students-table"><div class="empty">Aucun élève enregistré.</div></div>
-      </div>
-    </div>
-
-    <div id="tab-posts" class="admin-tab">
-      <div class="card">
-        <div class="card-title">Importer des postes</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Un poste par ligne : <code>Nom du poste | Ministère</code> (ministère optionnel). L'ordre d'import est conservé.</p>
-        <div class="field"><textarea id="posts-bulk" placeholder="Préfecture du Rhône | Intérieur&#10;DRFIP Île-de-France | Finances&#10;Conseil d'État | Premier Ministre"></textarea></div>
-        <div class="flex-gap">
-          <button class="btn btn-green" onclick="importPosts()">Importer</button>
-          <button class="btn btn-red btn-sm" onclick="clearPosts()">Tout effacer</button>
-        </div>
-        <div class="status" id="posts-status"></div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-head-title">Postes enregistrés</span>
-          <span class="badge badge-gray" id="posts-count">0</span>
-        </div>
-        <div id="posts-table"><div class="empty">Aucun poste enregistré.</div></div>
-      </div>
-    </div>
-
-    <div id="tab-choices" class="admin-tab">
-      <div class="stats">
-        <div class="stat"><div class="stat-label">Élèves ayant saisi leurs voeux</div><div class="stat-value" id="adm-voted">0</div></div>
-        <div class="stat"><div class="stat-label">V1 évincés</div><div class="stat-value" id="adm-evicted">0</div></div>
-        <div class="stat"><div class="stat-label">En attente</div><div class="stat-value" id="adm-waiting">—</div></div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-head-title">Tous les vœux</span>
-          <div class="flex-gap">
-            <input type="text" id="adm-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderChoicesTable()" />
-          </div>
-        </div>
-        <div id="choices-table"><div class="empty">Aucun vœu enregistré.</div></div>
-      </div>
-      <div style="text-align:right;margin-top:8px;">
-        <button class="btn btn-red btn-sm" onclick="resetChoices()">Réinitialiser tous les vœux</button>
-      </div>
-    </div>
-
-    <div id="tab-settings" class="admin-tab">
-      <div class="card">
-        <div class="card-title">Accès élèves</div>
-        <div class="flex-gap">
-          <label style="margin:0;font-size:14px;color:var(--text);text-transform:none;letter-spacing:0;" for="access-toggle">Autoriser les élèves à effectuer leurs vœux</label>
-          <input type="checkbox" id="access-toggle" style="width:auto;height:18px;accent-color:var(--green);" onchange="toggleAccess()" />
-        </div>
-        <p style="font-size:12px;color:var(--text2);margin-top:8px;">Désactivez pendant l'import. Activez quand la promotion peut commencer.</p>
-      </div>
-      <div class="card">
-        <div class="card-title">Code administrateur</div>
-        <div class="row2">
-          <div><label>Nouveau code</label><input type="password" id="new-pin" placeholder="Nouveau code" /></div>
-          <div><label>Confirmer</label><input type="password" id="confirm-pin" placeholder="Confirmer" /></div>
-        </div>
-        <button class="btn btn-green" onclick="changePin()">Enregistrer</button>
-        <div class="status" id="pin-change-status"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Exporter les vœux</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Téléchargez un fichier CSV avec l'ensemble des vœux.</p>
-        <button class="btn" onclick="exportCSV()">Télécharger CSV</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SCREEN : ÉLÈVE ══ -->
-  <div id="screen-student" class="screen">
-    <div class="flex-between" style="margin-bottom:4px;">
-      <h1 style="font-size:22px;font-weight:600;">Choix de poste</h1>
-      <button class="btn btn-sm" onclick="showScreen('screen-lock')">← Retour</button>
-    </div>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:1.5rem;">Promotion IRA — Sélectionnez votre nom et formulez jusqu'à 5 vœux par ordre de préférence.</p>
-
-    <div id="student-locked" style="display:none;">
-      <div class="lock-wrap" style="min-height:40vh;">
-        <div class="lock-box">
-          <div class="lock-icon">⏳</div>
-          <h2>Pas encore ouvert</h2>
-          <p>L'accès n'est pas encore activé. Revenez dans quelques instants.</p>
-          <button class="btn btn-sm" style="margin-top:8px;" onclick="refreshAll()">Actualiser</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="student-ui">
-      <div class="stats">
-        <div class="stat"><div class="stat-label">Élèves ayant saisi leurs voeux</div><div class="stat-value" id="st-voted">—</div></div>
-        <div class="stat"><div class="stat-label">Total vœux</div><div class="stat-value" id="st-total">—</div></div>
-        <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
-      </div>
-
-      <div class="card" style="margin-bottom:1rem;">
-        <div class="card-title">Mes vœux</div>
-        <div class="field">
-          <label>Je suis…</label>
-          <select id="student-select" onchange="onStudentSelect()">
-            <option value="">— Choisir mon nom —</option>
-          </select>
-        </div>
-
-        <div id="voeux-form" style="display:none;">
-          <!-- Alerte V1 évincé (rouge) -->
-          <div class="alert-box alert-red" id="alert-v1-evicted" style="display:none;"></div>
-          <!-- Alerte V2-V5 pris en V1 par mieux classé (orange) -->
-          <div class="alert-box alert-amber" id="alert-other-evicted" style="display:none;"></div>
-
-          <div style="margin-bottom:14px;" id="voeux-selects"></div>
-
-          <div class="flex-gap">
-            <button class="btn btn-green" onclick="submitChoice()">Enregistrer mes vœux</button>
-            <span class="status" id="student-status"></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-head-title">Vœux de la promotion</span>
-          <div class="flex-gap">
-            <input type="text" id="st-search" placeholder="Rechercher…" style="width:160px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
-          </div>
-        </div>
-        <div id="student-choices-table"><div class="empty">Aucun vœu enregistré pour l'instant.</div></div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-let students   = [];
-let posts      = []; // conservé dans l'ordre d'insertion (champ .order)
-let choices    = [];
-let accessOpen = false;
-let db         = null;
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "xxx.firebaseapp.com",
+  databaseURL: "https://xxx-default-rtdb.firebaseio.com",
+  projectId: "xxx"
+};
 
-/* ── Firebase ── */
-function initFirebase() {
-  if (!FIREBASE_CONFIGURED) { loadLocalFallback(); return; }
-  try {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.database();
-    setSyncLabel('Connexion…', true);
-    setupListeners();
-  } catch(e) { setSyncLabel('Erreur Firebase', false); }
-}
-function setSyncLabel(t, loading) {
-  document.getElementById('sync-label').textContent = t;
-  document.getElementById('sync-loader').style.display = loading ? '' : 'none';
-}
-function setupListeners() {
-  ['students','posts','choices','settings'].forEach(path => {
-    db.ref('ira/'+path).on('value', snap => {
-      const v = snap.val();
-      if (path === 'students') students = v ? Object.values(v).sort((a,b)=>a.rank-b.rank) : [];
-      if (path === 'posts')    posts    = v ? Object.values(v).sort((a,b)=>(a.order||0)-(b.order||0)) : [];
-      if (path === 'choices')  choices  = v ? Object.values(v).sort((a,b)=>a.rank-b.rank) : [];
-      if (path === 'settings') {
-        accessOpen = v?.accessOpen === true;
-        const tog = document.getElementById('access-toggle');
-        if (tog) tog.checked = accessOpen;
-      }
-      refreshAll();
-      setSyncLabel('Synchronisé · ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}), false);
-    });
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let students = [];
+let posts = [];
+let choices = [];
+
+const NB_VOEUX = 5;
+
+/* ───────── DATA ───────── */
+
+db.ref("students").on("value", s=>{
+  students = Object.values(s.val()||{});
+  renderStudents();
+});
+
+db.ref("posts").on("value", p=>{
+  posts = Object.values(p.val()||{});
+});
+
+db.ref("choices").on("value", c=>{
+  choices = Object.values(c.val()||{});
+  renderTable();
+});
+
+/* ───────── UI ───────── */
+
+function renderStudents(){
+  const sel = document.getElementById("student");
+  sel.innerHTML = '<option value="">-- choisir --</option>';
+  students.forEach(s=>{
+    let o=document.createElement("option");
+    o.value=s.rank;
+    o.textContent=s.rank+" - "+s.name;
+    sel.appendChild(o);
   });
 }
 
-/* ── Local fallback ── */
-const LS = {
-  get: k => { try { return JSON.parse(localStorage.getItem('ira_'+k)); } catch(e) { return null; } },
-  set: (k,v) => localStorage.setItem('ira_'+k, JSON.stringify(v))
-};
-function loadLocalFallback() {
-  students   = LS.get('students') || [];
-  posts      = (LS.get('posts')   || []).sort((a,b)=>(a.order||0)-(b.order||0));
-  choices    = LS.get('choices')  || [];
-  accessOpen = LS.get('access')   === true;
-  const tog = document.getElementById('access-toggle');
-  if (tog) tog.checked = accessOpen;
-  refreshAll();
-}
+function loadForm(){
+  const rank = +document.getElementById("student").value;
+  const container = document.getElementById("form");
+  if(!rank){ container.innerHTML=""; return; }
 
-/* ── Navigation ── */
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'screen-student') refreshAll();
-}
-function switchAdminTab(tabId, btn) {
-  document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tabId).style.display = 'block';
-  btn.classList.add('active');
-  if (tabId === 'tab-choices') renderChoicesTable();
-}
-async function tryAdmin() {
-  const pin = document.getElementById('pin-input').value;
-  let stored = 'admin2024';
-  if (db) { try { const s = await db.ref('ira/settings/pin').get(); if (s.val()) stored = s.val(); } catch(e){} }
-  else stored = LS.get('pin') || 'admin2024';
-  if (pin === stored) {
-    document.getElementById('pin-input').value = '';
-    document.getElementById('pin-err').textContent = '';
-    showScreen('screen-admin'); refreshAll();
-  } else {
-    document.getElementById('pin-err').textContent = 'Code incorrect.';
+  const c = choices.find(x=>x.rank===rank)||{};
+
+  let html = "";
+  for(let i=1;i<=NB_VOEUX;i++){
+    html += `
+      <div class="row">
+        <div>V${i}</div>
+        <select id="v${i}"></select>
+      </div>
+    `;
   }
+
+  container.innerHTML = html;
+
+  refreshOptions(rank, c);
 }
 
-/* ── Helpers métier ── */
+/* ───────── LOGIQUE CASCADE ───────── */
 
-// Retourne les postIds pris en V1 par des élèves de meilleur rang (rang < monRang)
-function takenV1ByBetter(rank) {
-  const s = new Set();
-  choices.forEach(c => { if (c.rank < rank && c.v1) s.add(c.v1); });
+function getSelected(rank, upTo){
+  const c = choices.find(x=>x.rank===rank);
+  if(!c) return new Set();
+  const s=new Set();
+  for(let i=1;i<=upTo;i++){
+    if(c["v"+i]) s.add(c["v"+i]);
+  }
   return s;
 }
 
-// Un élève est-il évincé sur son V1 ?
-function isEvictedV1(choice) {
-  if (!choice.v1) return false;
-  return choices.some(c => c.rank < choice.rank && c.v1 === choice.v1);
-}
+function refreshOptions(rank, existing){
 
-// Retourne les vœux 2-5 de choice qui sont pris en V1 par un meilleur rang
-function evictedOtherVoeux(choice) {
-  const blocked = takenV1ByBetter(choice.rank);
-  const warned = [];
-  for (let i = 2; i <= NB_VOEUX; i++) {
-    const vid = choice['v'+i];
-    if (vid && blocked.has(vid)) warned.push({ num: i, postId: vid });
-  }
-  return warned;
-}
+  for(let i=1;i<=NB_VOEUX;i++){
+    const sel = document.getElementById("v"+i);
+    sel.innerHTML = '<option value="">-- choix --</option>';
 
-function winnerOf(postId) {
-  return choices.filter(c => c.v1 === postId).reduce((best, c) => (!best || c.rank < best.rank) ? c : best, null);
-}
+    const already = getSelected(rank, i-1);
 
-function postName(id) { return posts.find(p=>p.id===id)?.name || ''; }
+    posts.forEach(p=>{
+      if(already.has(p.id)) return;
 
-/* ── Refresh global ── */
-function refreshAll() {
-  renderStudents();
-  renderPosts();
-  renderStudentScreen();
-  const rank = parseInt(document.getElementById('student-select').value);
-  if (rank) buildVoeuxForm(rank, false);
-}
-
-/* ── Render listes admin ── */
-function renderStudents() {
-  document.getElementById('students-count').textContent = students.length;
-  const sel = document.getElementById('student-select');
-  const prev = sel.value;
-  sel.innerHTML = '<option value="">— Choisir mon nom —</option>';
-  students.forEach(s => {
-    const o = document.createElement('option');
-    o.value = s.rank; o.textContent = `${s.rank}. ${s.name}`;
-    sel.appendChild(o);
-  });
-  if (prev) sel.value = prev;
-  const el = document.getElementById('students-table');
-  if (!students.length) { el.innerHTML = '<div class="empty">Aucun élève enregistré.</div>'; return; }
-  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Nom</th><th></th></tr></thead><tbody>` +
-    students.map(s => `<tr><td><span class="badge badge-gray">${s.rank}</span></td><td>${esc(s.name)}</td><td><button class="del-btn" onclick="delStudent(${s.rank})">✕</button></td></tr>`).join('') +
-    `</tbody></table>`;
-}
-
-function renderPosts() {
-  document.getElementById('posts-count').textContent = posts.length;
-  const el = document.getElementById('posts-table');
-  if (!posts.length) { el.innerHTML = '<div class="empty">Aucun poste enregistré.</div>'; return; }
-  el.innerHTML = `<table><thead><tr><th>#</th><th>Poste</th><th>Ministère</th><th></th></tr></thead><tbody>` +
-    posts.map((p,i) => `<tr><td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">${i+1}</td><td>${esc(p.name)}</td><td style="color:var(--text2)">${esc(p.ministry||'')}</td>
-      <td><button class="del-btn" onclick="delPost('${p.id}')">✕</button></td></tr>`).join('') +
-    `</tbody></table>`;
-}
-
-/* ── Écran élève ── */
-function renderStudentScreen() {
-  const locked = document.getElementById('student-locked');
-  const ui     = document.getElementById('student-ui');
-  document.getElementById('st-update').textContent = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  if (!accessOpen) { locked.style.display=''; ui.style.display='none'; return; }
-  locked.style.display='none'; ui.style.display='';
-  document.getElementById('st-voted').textContent = choices.length;
-  document.getElementById('st-total').textContent = choices.reduce((n,c)=>n+[...Array(NB_VOEUX)].filter((_,i)=>c['v'+(i+1)]).length,0);
-  renderStudentTable();
-}
-
-function onStudentSelect() {
-  const rank = parseInt(document.getElementById('student-select').value);
-  document.getElementById('voeux-form').style.display = rank ? '' : 'none';
-  if (rank) buildVoeuxForm(rank, true);
-}
-
-/* ── Construction du formulaire (cœur de la logique) ── */
-function buildVoeuxForm(rank, resetSelects) {
-  const myChoice = choices.find(c => c.rank === rank);
-  const blocked  = takenV1ByBetter(rank);
-
-  /* Génère les lignes de vœux si pas encore créées */
-  const container = document.getElementById('voeux-selects');
-  if (!document.getElementById('post-select-1')) {
-    let html = '';
-    for (let i = 1; i <= NB_VOEUX; i++) {
-      html += `<div class="voeu-row">
-        <div class="voeu-num">V${i}</div>
-        <select id="post-select-${i}"><option value="">— Vœu ${i}${i===1?' (prioritaire)':' (optionnel)'} —</option></select>
-      </div>`;
-      if (i === 1) html += `<div class="voeu-hint">Seuls les postes non réservés par un élève mieux classé sont disponibles en vœu 1.</div>`;
-    }
-    container.innerHTML = html;
-  }
-
-  /* Sauvegarde les valeurs actuelles si pas de reset */
-  const current = {};
-  for (let i = 1; i <= NB_VOEUX; i++) {
-    current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
-  }
-
-  /* Remplissage V1 : postes non bloqués uniquement */
-  const sel1 = document.getElementById('post-select-1');
-  const prevV1 = resetSelects ? (myChoice?.v1||'') : current.v1;
-  sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
-  posts.forEach(p => {
-    if (blocked.has(p.id)) return;
-    const o = document.createElement('option');
-    o.value = p.id; o.textContent = p.name + (p.ministry?` (${p.ministry})`:'');
-    sel1.appendChild(o);
-  });
-  if (prevV1 && !blocked.has(prevV1)) sel1.value = prevV1;
-
-  /* Remplissage V2-V5 : tous les postes */
-  for (let i = 2; i <= NB_VOEUX; i++) {
-    const sel = document.getElementById('post-select-'+i);
-    const prev = resetSelects ? (myChoice?.['v'+i]||'') : current['v'+i];
-    sel.innerHTML = `<option value="">— Vœu ${i} (optionnel) —</option>`;
-    posts.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p.id; o.textContent = p.name + (p.ministry?` (${p.ministry})`:'');
+      let o=document.createElement("option");
+      o.value=p.id;
+      o.textContent=p.name;
       sel.appendChild(o);
     });
-    if (prev) sel.value = prev;
-  }
 
-  /* Alertes */
-  // Alerte V1 évincé
-  const alertV1 = document.getElementById('alert-v1-evicted');
-  if (myChoice && myChoice.v1 && blocked.has(myChoice.v1)) {
-    const winner = winnerOf(myChoice.v1);
-    alertV1.style.display = '';
-    alertV1.innerHTML = `⚠️ <strong>Votre vœu 1 "${esc(postName(myChoice.v1))}" a été pris par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}), mieux classé que vous.</strong><br>Ce poste n'est plus disponible en vœu 1. Veuillez choisir un autre vœu 1.`;
-  } else {
-    alertV1.style.display = 'none';
-  }
-
-  // Alerte V2-V5 pris en V1 par mieux classé
-  const alertOther = document.getElementById('alert-other-evicted');
-  if (myChoice) {
-    const warned = evictedOtherVoeux(myChoice);
-    if (warned.length) {
-      const lines = warned.map(w => {
-        const winner = winnerOf(w.postId);
-        return `Vœu ${w.num} — <strong>${esc(postName(w.postId))}</strong> : choisi en vœu 1 par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}).`;
-      });
-      alertOther.style.display = '';
-      alertOther.innerHTML = `⚠️ Les vœux suivants ont été sélectionnés en vœu 1 par un élève mieux classé — ils vous seront probablement attribués uniquement si cet élève change de vœu :<br><br>` + lines.join('<br>');
-    } else {
-      alertOther.style.display = 'none';
+    if(existing && existing["v"+i]){
+      sel.value = existing["v"+i];
     }
-  } else {
-    alertOther.style.display = 'none';
   }
 }
 
-/* ── Soumission ── */
-async function submitChoice() {
-  const rank = parseInt(document.getElementById('student-select').value);
-  const status = document.getElementById('student-status');
-  if (!rank) { status.textContent='Sélectionnez votre nom.'; status.className='status err'; return; }
-  const v1 = document.getElementById('post-select-1').value;
-  if (!v1) { status.textContent='Le vœu 1 est obligatoire.'; status.className='status err'; return; }
+/* ───────── SAVE ───────── */
 
-  // Double-vérif : V1 non bloqué
-  const blocked = takenV1ByBetter(rank);
-  if (blocked.has(v1)) {
-    status.textContent='Ce poste vient d\'être pris par un élève mieux classé. Veuillez en choisir un autre.';
-    status.className='status err';
-    buildVoeuxForm(rank, false); return;
+function save(){
+  const rank = +document.getElementById("student").value;
+  if(!rank) return;
+
+  const entry = { rank, ts: Date.now() };
+
+  for(let i=1;i<=NB_VOEUX;i++){
+    entry["v"+i] = document.getElementById("v"+i).value || "";
   }
 
-  const student = students.find(s=>s.rank===rank);
-  if (!student) return;
-  const entry = { rank, name: student.name, ts: Date.now() };
-  for (let i = 1; i <= NB_VOEUX; i++) entry['v'+i] = document.getElementById('post-select-'+i).value || '';
+  db.ref("choices/"+rank).set(entry);
 
-  if (db) {
-    await db.ref(`ira/choices/${rank}`).set(entry);
-  } else {
-    const idx = choices.findIndex(c=>c.rank===rank);
-    if (idx>=0) choices[idx]=entry; else choices.push(entry);
-    choices.sort((a,b)=>a.rank-b.rank);
-    LS.set('choices',choices); refreshAll();
-  }
-  status.textContent='Vœux enregistrés !'; status.className='status ok';
-  setTimeout(()=>{ status.textContent=''; }, 3000);
+  document.getElementById("status").textContent="Enregistré ✔";
+  setTimeout(()=>document.getElementById("status").textContent="",2000);
 }
 
-/* ── Table élève ── */
-function renderStudentTable() {
-  const q = (document.getElementById('st-search').value||'').toLowerCase();
-  const myRank = parseInt(document.getElementById('student-select').value)||0;
-  const filtered = choices.filter(c => {
-    if (!q) return true;
-    const p1=posts.find(p=>p.id===c.v1);
-    return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
-  });
-  const el = document.getElementById('student-choices-table');
-  if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
+/* ───────── TABLE ───────── */
 
-  // En-têtes dynamiques selon NB_VOEUX
-  const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th>Vœu ${i+1}</th>`).join('');
-  const rows = filtered.map(c => {
-    const isMe = c.rank === myRank;
-    const evictedV1 = isEvictedV1(c);
-    const otherEvicted = new Set(evictedOtherVoeux(c).map(w=>w.num));
-    const cells = [...Array(NB_VOEUX)].map((_,i) => {
-      const n = i+1;
-      const pid = c['v'+n];
-      const pn = pid ? esc(postName(pid)) : '—';
-      if (n===1 && evictedV1)        return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1 && otherEvicted.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠ pris en V1)</span></td>`;
-      return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
-    }).join('');
-    return `<tr style="${isMe?'background:var(--green-lt);':''}">
-      <td><span class="badge badge-gray">${c.rank}</span>${isMe?'&nbsp;<span style="font-size:10px;color:var(--green);">moi</span>':''}</td>
-      <td style="${isMe?'font-weight:600;':''}">${esc(c.name)}</td>
-      ${cells}
-    </tr>`;
-  }).join('');
-  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}</tr></thead><tbody>${rows}</tbody></table>`;
+function postName(id){
+  return posts.find(p=>p.id===id)?.name || "";
 }
 
-/* ── Table admin ── */
-function renderChoicesTable() {
-  const q = (document.getElementById('adm-search')?.value||'').toLowerCase();
-  const filtered = choices.filter(c => {
-    if (!q) return true;
-    const p1=posts.find(p=>p.id===c.v1);
-    return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
-  });
-  const el = document.getElementById('choices-table'); if (!el) return;
-  document.getElementById('adm-voted').textContent   = choices.length;
-  document.getElementById('adm-evicted').textContent = choices.filter(c=>isEvictedV1(c)).length;
-  document.getElementById('adm-waiting').textContent = Math.max(0, students.length-choices.length);
-  if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré.</div>'; return; }
-  const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th>V${i+1}</th>`).join('');
-  const rows = filtered.map(c => {
-    const evictedV1 = isEvictedV1(c);
-    const otherEv   = new Set(evictedOtherVoeux(c).map(w=>w.num));
-    const cells = [...Array(NB_VOEUX)].map((_,i) => {
-      const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
-      if (n===1&&evictedV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1&&otherEv.has(n))       return `<td>${pn} <span class="evicted-warn">(⚠V1)</span></td>`;
-      return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
-    }).join('');
-    return `<tr>
-      <td><span class="badge badge-gray">${c.rank}</span></td>
-      <td>${esc(c.name)}</td>
-      ${cells}
-      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);">${new Date(c.ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</td>
-      <td><button class="del-btn" onclick="delChoice(${c.rank})">✕</button></td>
-    </tr>`;
-  }).join('');
-  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}<th>Heure</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
-}
+function renderTable(){
+  let html = "<tr><th>Rang</th><th>Nom</th><th>V1</th><th>V2</th><th>V3</th><th>V4</th><th>V5</th></tr>";
 
-/* ── Actions admin ── */
-async function importStudents() {
-  const lines = document.getElementById('students-bulk').value.trim().split('\n').filter(l=>l.trim());
-  const toImport = [];
-  for (const line of lines) {
-    const parts=line.split(';'); if(parts.length<2)continue;
-    const rank=parseInt(parts[0].trim()), name=parts.slice(1).join(';').trim();
-    if(!rank||!name)continue;
-    toImport.push({rank,name});
-  }
-  if (!toImport.length) { setStatus('students-status','Format invalide.','err'); return; }
-  if (db) { const u={}; toImport.forEach(s=>{u[`ira/students/${s.rank}`]=s;}); await db.ref().update(u); }
-  else { toImport.forEach(ns=>{const i=students.findIndex(s=>s.rank===ns.rank);if(i>=0)students[i]=ns;else students.push(ns);}); students.sort((a,b)=>a.rank-b.rank); LS.set('students',students); renderStudents(); }
-  document.getElementById('students-bulk').value='';
-  setStatus('students-status',`${toImport.length} élève(s) importé(s).`,'ok');
-}
-
-async function importPosts() {
-  const lines = document.getElementById('posts-bulk').value.trim().split('\n').filter(l=>l.trim());
-  const toImport = [];
-  // L'ordre de départ est max(order existant) + 1, 2, ...
-  const maxOrder = posts.length ? Math.max(...posts.map(p=>p.order||0)) : 0;
-  lines.forEach((line,idx) => {
-    const parts=line.split('|'), name=parts[0].trim();
-    if(!name)return;
-    toImport.push({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), name, ministry:parts[1]?.trim()||'', order: maxOrder+idx+1});
-  });
-  if (!toImport.length) { setStatus('posts-status','Aucun poste valide.','err'); return; }
-  if (db) { const u={}; toImport.forEach(p=>{u[`ira/posts/${p.id}`]=p;}); await db.ref().update(u); }
-  else { posts=[...posts,...toImport].sort((a,b)=>(a.order||0)-(b.order||0)); LS.set('posts',posts); renderPosts(); }
-  document.getElementById('posts-bulk').value='';
-  setStatus('posts-status',`${toImport.length} poste(s) importé(s).`,'ok');
-}
-
-async function clearStudents(){if(!confirm('Effacer tous les élèves ?'))return;if(db)await db.ref('ira/students').remove();else{students=[];LS.set('students',[]);renderStudents();}}
-async function clearPosts()   {if(!confirm('Effacer tous les postes ?'))return; if(db)await db.ref('ira/posts').remove();   else{posts=[];LS.set('posts',[]);renderPosts();}}
-async function delStudent(rank){if(db)await db.ref(`ira/students/${rank}`).remove();else{students=students.filter(s=>s.rank!==rank);LS.set('students',students);renderStudents();}}
-async function delPost(id)    {if(db)await db.ref(`ira/posts/${id}`).remove();     else{posts=posts.filter(p=>p.id!==id);LS.set('posts',posts);renderPosts();}}
-async function delChoice(rank){if(!confirm('Supprimer les vœux de cet élève ?'))return;if(db)await db.ref(`ira/choices/${rank}`).remove();else{choices=choices.filter(c=>c.rank!==rank);LS.set('choices',choices);refreshAll();}}
-async function resetChoices() {if(!confirm('Réinitialiser TOUS les vœux ?'))return;if(db)await db.ref('ira/choices').remove();else{choices=[];LS.set('choices',[]);refreshAll();}}
-
-async function toggleAccess(){
-  const val=document.getElementById('access-toggle').checked;
-  if(db)await db.ref('ira/settings/accessOpen').set(val);
-  else{accessOpen=val;LS.set('access',val);renderStudentScreen();}
-}
-async function changePin(){
-  const p1=document.getElementById('new-pin').value,p2=document.getElementById('confirm-pin').value;
-  if(!p1){setStatus('pin-change-status','Entrez un code.','err');return;}
-  if(p1!==p2){setStatus('pin-change-status','Les codes ne correspondent pas.','err');return;}
-  if(db)await db.ref('ira/settings/pin').set(p1);else LS.set('pin',p1);
-  document.getElementById('new-pin').value='';document.getElementById('confirm-pin').value='';
-  setStatus('pin-change-status','Code modifié.','ok');
-}
-
-function exportCSV(){
-  const headers=['Rang','Élève',...[...Array(NB_VOEUX)].map((_,i)=>`Vœu ${i+1}`),'V1 évincé','Heure'];
-  const rows=[headers];
   choices.forEach(c=>{
-    const voeux=[...Array(NB_VOEUX)].map((_,i)=>postName(c['v'+(i+1)])||'');
-    rows.push([c.rank,c.name,...voeux,isEvictedV1(c)?'Oui':'Non',new Date(c.ts).toLocaleString('fr-FR')]);
+    html += "<tr>";
+    html += "<td>"+c.rank+"</td>";
+    html += "<td>"+c.name+"</td>";
+
+    for(let i=1;i<=NB_VOEUX;i++){
+      html += "<td>"+postName(c["v"+i])+"</td>";
+    }
+
+    html += "</tr>";
   });
-  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
-  a.download='voeux-postes-IRA.csv';a.click();
+
+  document.getElementById("table").innerHTML = html;
 }
 
-function setStatus(id,msg,cls){
-  const el=document.getElementById(id);if(!el)return;
-  el.textContent=msg;el.className='status '+cls;
-  setTimeout(()=>{el.textContent='';},4000);
-}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-initFirebase();
 </script>
+
 </body>
 </html>
