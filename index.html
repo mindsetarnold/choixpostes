@@ -22,7 +22,6 @@
     --green-lt:  #EBF6F0;
     --blue:      #1A5FA0;
     --blue-bg:   #D6E8F8;
-    --blue-lt:   #EBF3FC;
     --amber:     #8A5A0A;
     --amber-bg:  #FDF0D5;
     --red:       #8B2020;
@@ -64,10 +63,13 @@
   .btn-red:hover   { background: #f5d5d5; }
   .btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
   .btn-lg { height: 46px; font-size: 15px; font-weight: 600; border-radius: var(--radius-lg); }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+
+  /* Stats — 2 colonnes seulement désormais */
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.5rem; }
   .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.1rem; }
   .stat-label { font-size: 11px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
   .stat-value { font-size: 26px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+
   .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 1rem; }
   .table-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
   .table-head-title { font-size: 13px; font-weight: 600; color: var(--text); }
@@ -77,16 +79,12 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--green-lt); }
   .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; font-family: 'DM Mono', monospace; }
-  .badge-green  { background: var(--green-bg); color: var(--green); }
-  .badge-gray   { background: var(--surface2); color: var(--text2); }
-  .badge-amber  { background: var(--amber-bg); color: var(--amber); }
-  .badge-red    { background: var(--red-bg);   color: var(--red);   }
-  .badge-blue   { background: var(--blue-bg);  color: var(--blue);  }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-gray  { background: var(--surface2); color: var(--text2); }
   .status { font-size: 12px; min-height: 18px; margin-top: 8px; font-weight: 500; }
   .ok  { color: var(--green); }
   .err { color: var(--red); }
 
-  /* Lock screen */
   .lock-wrap { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
   .lock-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; max-width: 380px; width: 100%; box-shadow: var(--shadow); }
   .lock-icon { font-size: 32px; margin-bottom: 1rem; }
@@ -98,17 +96,14 @@
   .lock-divider::before, .lock-divider::after { content:''; flex:1; height:1px; background: var(--border2); }
   .lock-divider span { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* Voeux form */
   .voeu-row { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
   .voeu-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text2); text-align: center; }
   .voeu-hint { font-size: 11px; color: var(--text3); margin: -6px 0 10px 46px; }
 
-  /* Alert boxes */
   .alert-box { border-radius: var(--radius); padding: 12px 16px; font-size: 13px; font-weight: 500; margin-bottom: 12px; }
-  .alert-red    { background: var(--red-bg);   border: 1px solid #e0b0b0; color: var(--red); }
-  .alert-amber  { background: var(--amber-bg); border: 1px solid #e8c87a; color: var(--amber); }
+  .alert-red   { background: var(--red-bg);   border: 1px solid #e0b0b0; color: var(--red); }
+  .alert-amber { background: var(--amber-bg); border: 1px solid #e8c87a; color: var(--amber); }
 
-  /* Eviction in table */
   .evicted-v1   { color: var(--red);   font-weight: 600; }
   .evicted-warn { color: var(--amber); font-weight: 500; font-size: 11px; }
 
@@ -122,7 +117,6 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   @media (max-width: 560px) {
     .stats { grid-template-columns: 1fr 1fr; }
-    .stats .stat:last-child { grid-column: span 2; }
     .page { padding: 1.5rem 1rem 3rem; }
   }
 </style>
@@ -152,22 +146,16 @@
     </div>
   </div>
 
-  <!-- ══ SCREEN : LOCK ══ -->
+  <!-- LOCK -->
   <div id="screen-lock" class="screen active">
     <div class="lock-wrap">
       <div class="lock-box">
         <div class="lock-icon">🎓</div>
         <h2>Promotion IRA</h2>
         <p>Choisissez votre mode d'accès</p>
-
-        <!-- Bouton élève en premier, mis en valeur -->
-        <button class="btn btn-blue btn-lg" onclick="showScreen('screen-student')" style="width:100%;justify-content:center;margin-bottom:6px;">
-          Accès élève
-        </button>
+        <button class="btn btn-blue btn-lg" onclick="showScreen('screen-student')" style="width:100%;justify-content:center;margin-bottom:6px;">Accès élève</button>
         <p style="font-size:11px;color:var(--text3);margin-bottom:0;">Consultez et enregistrez vos vœux de postes</p>
-
         <div class="lock-divider"><span>Administration</span></div>
-
         <p style="font-size:13px;color:var(--text2);margin-bottom:10px;">Entrez le code admin pour gérer les données.</p>
         <div class="pin-row">
           <input type="password" id="pin-input" placeholder="Code admin" maxlength="30" onkeydown="if(event.key==='Enter')tryAdmin()" />
@@ -178,7 +166,7 @@
     </div>
   </div>
 
-  <!-- ══ SCREEN : ADMIN ══ -->
+  <!-- ADMIN -->
   <div id="screen-admin" class="screen">
     <div class="flex-between" style="margin-bottom:1.5rem;">
       <div>
@@ -217,8 +205,8 @@
     <div id="tab-posts" class="admin-tab">
       <div class="card">
         <div class="card-title">Importer des postes</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Un poste par ligne : <code>Nom du poste | Ministère</code> (ministère optionnel). L'ordre d'import est conservé.</p>
-        <div class="field"><textarea id="posts-bulk" placeholder="Préfecture du Rhône | Intérieur&#10;DRFIP Île-de-France | Finances&#10;Conseil d'État | Premier Ministre"></textarea></div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Un poste par ligne : <code>Nom du poste | Ministère</code>. L'ordre d'import est conservé. Les doublons de noms sont gérés automatiquement.</p>
+        <div class="field"><textarea id="posts-bulk" placeholder="AC - Intérieur | Intérieur&#10;AC - Intérieur | Intérieur&#10;Préfecture du Rhône | Intérieur"></textarea></div>
         <div class="flex-gap">
           <button class="btn btn-green" onclick="importPosts()">Importer</button>
           <button class="btn btn-red btn-sm" onclick="clearPosts()">Tout effacer</button>
@@ -236,8 +224,7 @@
 
     <div id="tab-choices" class="admin-tab">
       <div class="stats">
-        <div class="stat"><div class="stat-label">Élèves ayant saisi leurs voeux</div><div class="stat-value" id="adm-voted">0</div></div>
-        <div class="stat"><div class="stat-label">V1 évincés</div><div class="stat-value" id="adm-evicted">0</div></div>
+        <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="adm-voted">0</div></div>
         <div class="stat"><div class="stat-label">En attente</div><div class="stat-value" id="adm-waiting">—</div></div>
       </div>
       <div class="table-wrap">
@@ -280,7 +267,7 @@
     </div>
   </div>
 
-  <!-- ══ SCREEN : ÉLÈVE ══ -->
+  <!-- ÉLÈVE -->
   <div id="screen-student" class="screen">
     <div class="flex-between" style="margin-bottom:4px;">
       <h1 style="font-size:22px;font-weight:600;">Choix de poste</h1>
@@ -301,7 +288,7 @@
 
     <div id="student-ui">
       <div class="stats">
-        <div class="stat"><div class="stat-label">Élèves ayant saisi leurs voeux</div><div class="stat-value" id="st-voted">—</div></div>
+        <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="st-voted">—</div></div>
         <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
       </div>
 
@@ -313,15 +300,10 @@
             <option value="">— Choisir mon nom —</option>
           </select>
         </div>
-
         <div id="voeux-form" style="display:none;">
-          <!-- Alerte V1 évincé (rouge) -->
-          <div class="alert-box alert-red" id="alert-v1-evicted" style="display:none;"></div>
-          <!-- Alerte V2-V5 pris en V1 par mieux classé (orange) -->
+          <div class="alert-box alert-red"   id="alert-v1-evicted"    style="display:none;"></div>
           <div class="alert-box alert-amber" id="alert-other-evicted" style="display:none;"></div>
-
-          <div style="margin-bottom:14px;" id="voeux-selects"></div>
-
+          <div id="voeux-selects" style="margin-bottom:14px;"></div>
           <div class="flex-gap">
             <button class="btn btn-green" onclick="submitChoice()">Enregistrer mes vœux</button>
             <span class="status" id="student-status"></span>
@@ -347,12 +329,11 @@
 
 <script>
 let students   = [];
-let posts      = []; // conservé dans l'ordre d'insertion (champ .order)
+let posts      = [];
 let choices    = [];
 let accessOpen = false;
 let db         = null;
 
-/* ── Firebase ── */
 function initFirebase() {
   if (!FIREBASE_CONFIGURED) { loadLocalFallback(); return; }
   try {
@@ -384,7 +365,6 @@ function setupListeners() {
   });
 }
 
-/* ── Local fallback ── */
 const LS = {
   get: k => { try { return JSON.parse(localStorage.getItem('ira_'+k)); } catch(e) { return null; } },
   set: (k,v) => localStorage.setItem('ira_'+k, JSON.stringify(v))
@@ -399,7 +379,6 @@ function loadLocalFallback() {
   refreshAll();
 }
 
-/* ── Navigation ── */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -426,22 +405,24 @@ async function tryAdmin() {
   }
 }
 
-/* ── Helpers métier ── */
+/* ════════════════════════════════════════
+   LOGIQUE MÉTIER
+════════════════════════════════════════ */
 
-// Retourne les postIds pris en V1 par des élèves de meilleur rang (rang < monRang)
+// Postes pris en V1 par des élèves de meilleur rang (rang < monRang)
 function takenV1ByBetter(rank) {
   const s = new Set();
   choices.forEach(c => { if (c.rank < rank && c.v1) s.add(c.v1); });
   return s;
 }
 
-// Un élève est-il évincé sur son V1 ?
+// V1 d'un élève est-il évincé ?
 function isEvictedV1(choice) {
   if (!choice.v1) return false;
   return choices.some(c => c.rank < choice.rank && c.v1 === choice.v1);
 }
 
-// Retourne les vœux 2-5 de choice qui sont pris en V1 par un meilleur rang
+// Vœux 2-5 d'un élève pris en V1 par un meilleur rang
 function evictedOtherVoeux(choice) {
   const blocked = takenV1ByBetter(choice.rank);
   const warned = [];
@@ -453,12 +434,30 @@ function evictedOtherVoeux(choice) {
 }
 
 function winnerOf(postId) {
-  return choices.filter(c => c.v1 === postId).reduce((best, c) => (!best || c.rank < best.rank) ? c : best, null);
+  return choices.filter(c => c.v1 === postId)
+    .reduce((best, c) => (!best || c.rank < best.rank) ? c : best, null);
 }
 
-function postName(id) { return posts.find(p=>p.id===id)?.name || ''; }
+function postName(id) {
+  return posts.find(p => p.id === id)?.name || '';
+}
 
-/* ── Refresh global ── */
+/*
+  Calcule le nombre de postes restants pour un nom donné.
+  "Restant" = total de postes portant ce nom MOINS le nombre de V1
+  (de meilleur rang que `rank`) qui pointent vers un poste de ce nom.
+  Utilisé pour les menus V2-V5.
+*/
+function remainingByName(name, rank) {
+  const total = posts.filter(p => p.name === name).length;
+  // Combien de V1 de meilleurs rangs pointent vers un poste de ce nom ?
+  const takenCount = choices.filter(c => c.rank < rank && c.v1 && postName(c.v1) === name).length;
+  return Math.max(0, total - takenCount);
+}
+
+/* ════════════════════════════════════════
+   REFRESH GLOBAL
+════════════════════════════════════════ */
 function refreshAll() {
   renderStudents();
   renderPosts();
@@ -467,7 +466,9 @@ function refreshAll() {
   if (rank) buildVoeuxForm(rank, false);
 }
 
-/* ── Render listes admin ── */
+/* ════════════════════════════════════════
+   RENDER ADMIN
+════════════════════════════════════════ */
 function renderStudents() {
   document.getElementById('students-count').textContent = students.length;
   const sel = document.getElementById('student-select');
@@ -491,12 +492,18 @@ function renderPosts() {
   const el = document.getElementById('posts-table');
   if (!posts.length) { el.innerHTML = '<div class="empty">Aucun poste enregistré.</div>'; return; }
   el.innerHTML = `<table><thead><tr><th>#</th><th>Poste</th><th>Ministère</th><th></th></tr></thead><tbody>` +
-    posts.map((p,i) => `<tr><td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">${i+1}</td><td>${esc(p.name)}</td><td style="color:var(--text2)">${esc(p.ministry||'')}</td>
-      <td><button class="del-btn" onclick="delPost('${p.id}')">✕</button></td></tr>`).join('') +
+    posts.map((p,i) => `<tr>
+      <td style="color:var(--text3);font-family:'DM Mono',monospace;font-size:11px;">${i+1}</td>
+      <td>${esc(p.name)}</td>
+      <td style="color:var(--text2)">${esc(p.ministry||'')}</td>
+      <td><button class="del-btn" onclick="delPost('${p.id}')">✕</button></td>
+    </tr>`).join('') +
     `</tbody></table>`;
 }
 
-/* ── Écran élève ── */
+/* ════════════════════════════════════════
+   RENDER ÉLÈVE
+════════════════════════════════════════ */
 function renderStudentScreen() {
   const locked = document.getElementById('student-locked');
   const ui     = document.getElementById('student-ui');
@@ -513,63 +520,173 @@ function onStudentSelect() {
   if (rank) buildVoeuxForm(rank, true);
 }
 
-/* ── Construction du formulaire (cœur de la logique) ── */
+/* ════════════════════════════════════════
+   CONSTRUCTION DU FORMULAIRE DE VŒUX
+════════════════════════════════════════ */
 function buildVoeuxForm(rank, resetSelects) {
   const myChoice = choices.find(c => c.rank === rank);
-  const blocked  = takenV1ByBetter(rank);
+  const blocked  = takenV1ByBetter(rank); // postIds interdits en V1
 
-  /* Génère les lignes de vœux si pas encore créées */
+  // Crée les lignes si première fois
   const container = document.getElementById('voeux-selects');
   if (!document.getElementById('post-select-1')) {
     let html = '';
     for (let i = 1; i <= NB_VOEUX; i++) {
       html += `<div class="voeu-row">
         <div class="voeu-num">V${i}</div>
-        <select id="post-select-${i}"><option value="">— Vœu ${i}${i===1?' (prioritaire)':' (optionnel)'} —</option></select>
+        <select id="post-select-${i}" onchange="onVoeuChange()">
+          <option value="">— Vœu ${i}${i===1?' (prioritaire)':' (optionnel)'} —</option>
+        </select>
       </div>`;
-      if (i === 1) html += `<div class="voeu-hint">Seuls les postes non réservés par un élève mieux classé sont disponibles en vœu 1.</div>`;
+      if (i === 1) html += `<div class="voeu-hint">Seuls les postes non réservés en vœu 1 par un élève mieux classé sont disponibles ici.</div>`;
     }
     container.innerHTML = html;
   }
 
-  /* Sauvegarde les valeurs actuelles si pas de reset */
+  // Valeurs actuelles (avant rebuild)
   const current = {};
   for (let i = 1; i <= NB_VOEUX; i++) {
     current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
   }
 
-  /* Remplissage V1 : postes non bloqués uniquement */
-  const sel1 = document.getElementById('post-select-1');
-  const prevV1 = resetSelects ? (myChoice?.v1||'') : current.v1;
-  sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
-  posts.forEach(p => {
-    if (blocked.has(p.id)) return;
-    const o = document.createElement('option');
-    o.value = p.id; o.textContent = p.name + (p.ministry?` (${p.ministry})`:'');
-    sel1.appendChild(o);
-  });
-  if (prevV1 && !blocked.has(prevV1)) sel1.value = prevV1;
-
-  /* Remplissage V2-V5 : tous les postes */
-  for (let i = 2; i <= NB_VOEUX; i++) {
-    const sel = document.getElementById('post-select-'+i);
-    const prev = resetSelects ? (myChoice?.['v'+i]||'') : current['v'+i];
-    sel.innerHTML = `<option value="">— Vœu ${i} (optionnel) —</option>`;
-    posts.forEach(p => {
-      const o = document.createElement('option');
-      o.value = p.id; o.textContent = p.name + (p.ministry?` (${p.ministry})`:'');
-      sel.appendChild(o);
-    });
-    if (prev) sel.value = prev;
+  // Valeurs à restaurer
+  const toRestore = {};
+  for (let i = 1; i <= NB_VOEUX; i++) {
+    toRestore['v'+i] = resetSelects ? (myChoice?.['v'+i]||'') : current['v'+i];
   }
 
-  /* Alertes */
+  // IDs déjà sélectionnés dans d'autres vœux (pour exclusion inter-vœux)
+  // On calcule ça après rebuild à chaque changement via onVoeuChange
+
+  // Remplissage V1 : postes non bloqués par meilleur rang
+  fillSelect(1, rank, blocked, toRestore.v1, toRestore);
+
+  // Remplissage V2-V5 : avec exclusion des vœux déjà sélectionnés
+  for (let i = 2; i <= NB_VOEUX; i++) {
+    fillSelect(i, rank, blocked, toRestore['v'+i], toRestore);
+  }
+
+  // Alertes
+  updateAlerts(rank, myChoice, blocked);
+}
+
+/*
+  Remplit un menu déroulant de vœu.
+  - Pour V1 : exclut les postes bloqués par meilleur rang
+  - Pour V2-V5 : affiche tous les postes SAUF ceux déjà choisis dans les vœux précédents
+    ET affiche le décompte restant pour les postes en doublon de nom
+*/
+function fillSelect(voeuNum, rank, blocked, currentValue, allCurrentValues) {
+  const sel = document.getElementById('post-select-'+voeuNum);
+  if (!sel) return;
+
+  // IDs déjà sélectionnés dans les AUTRES vœux
+  const otherSelected = new Set();
+  for (let i = 1; i <= NB_VOEUX; i++) {
+    if (i === voeuNum) continue;
+    const v = allCurrentValues['v'+i] || document.getElementById('post-select-'+i)?.value || '';
+    if (v) otherSelected.add(v);
+  }
+
+  sel.innerHTML = `<option value="">— Vœu ${voeuNum}${voeuNum===1?' (prioritaire)':' (optionnel)'} —</option>`;
+
+  if (voeuNum === 1) {
+    // V1 : exclure postes bloqués par meilleur rang + postes déjà dans autres vœux
+    posts.forEach(p => {
+      if (blocked.has(p.id)) return;
+      if (otherSelected.has(p.id)) return;
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = p.name + (p.ministry ? ` (${p.ministry})` : '');
+      sel.appendChild(o);
+    });
+  } else {
+    // V2-V5 : regrouper par nom pour afficher le décompte restant
+    // On construit une map nom -> liste de postes (dans l'ordre)
+    const nameMap = new Map(); // nom -> [{id, ministry, order}]
+    posts.forEach(p => {
+      if (!nameMap.has(p.name)) nameMap.set(p.name, []);
+      nameMap.get(p.name).push(p);
+    });
+
+    // Pour chaque groupe de postes de même nom, on propose UN seul item dans le select
+    // qui représente "choisir ce type de poste"
+    // L'id sélectionné sera l'id du premier poste disponible du groupe
+    // (non bloqué en V1 par meilleur rang, et dont il reste des exemplaires)
+    const seenNames = new Set();
+    posts.forEach(p => {
+      if (seenNames.has(p.name)) return; // déjà traité ce nom
+      seenNames.add(p.name);
+
+      const group = nameMap.get(p.name);
+      const remaining = remainingByName(p.name, rank);
+
+      // Trouve le premier poste du groupe non sélectionné dans un autre vœu
+      // et dont le "nom" a encore des exemplaires disponibles
+      // Pour V2-V5, on ne bloque pas même si pris en V1 par meilleur rang,
+      // mais on informe avec le décompte
+      const availableInGroup = group.filter(gp => !otherSelected.has(gp.id));
+      if (availableInGroup.length === 0) return; // tous les exemplaires de ce nom déjà dans d'autres vœux
+
+      // L'id représentatif = premier disponible du groupe
+      const repId = availableInGroup[0].id;
+
+      const o = document.createElement('option');
+      o.value = repId;
+
+      let label = p.name + (p.ministry ? ` (${p.ministry})` : '');
+      if (group.length > 1) {
+        // Poste en doublon : afficher le nombre restant
+        label += ` — reste ${remaining} poste${remaining > 1 ? 's' : ''}`;
+      }
+      o.textContent = label;
+      sel.appendChild(o);
+    });
+  }
+
+  // Restaure la valeur si elle est encore disponible
+  if (currentValue) {
+    // Pour V2-V5, la valeur sauvegardée peut être un id d'un exemplaire du groupe,
+    // mais le select affiche maintenant l'id du "premier disponible" du groupe.
+    // On cherche si un item du select correspond au même nom de poste.
+    const savedPostName = postName(currentValue);
+    let found = false;
+    for (const opt of sel.options) {
+      if (opt.value === currentValue) { sel.value = currentValue; found = true; break; }
+      // Même nom de poste → sélectionner cet option représentatif
+      if (opt.value && postName(opt.value) === savedPostName) { sel.value = opt.value; found = true; break; }
+    }
+  }
+}
+
+// Appelé à chaque changement de vœu pour mettre à jour les autres dropdowns
+function onVoeuChange() {
+  const rank = parseInt(document.getElementById('student-select').value);
+  if (!rank) return;
+  const myChoice = choices.find(c => c.rank === rank);
+  const blocked  = takenV1ByBetter(rank);
+
+  // Récupère les valeurs actuelles
+  const current = {};
+  for (let i = 1; i <= NB_VOEUX; i++) {
+    current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
+  }
+
+  // Rebuild tous les selects pour mettre à jour les exclusions
+  for (let i = 1; i <= NB_VOEUX; i++) {
+    fillSelect(i, rank, blocked, current['v'+i], current);
+  }
+
+  updateAlerts(rank, myChoice, blocked);
+}
+
+function updateAlerts(rank, myChoice, blocked) {
   // Alerte V1 évincé
   const alertV1 = document.getElementById('alert-v1-evicted');
   if (myChoice && myChoice.v1 && blocked.has(myChoice.v1)) {
     const winner = winnerOf(myChoice.v1);
     alertV1.style.display = '';
-    alertV1.innerHTML = `⚠️ <strong>Votre vœu 1 "${esc(postName(myChoice.v1))}" a été pris par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}), mieux classé que vous.</strong><br>Ce poste n'est plus disponible en vœu 1. Veuillez choisir un autre vœu 1.`;
+    alertV1.innerHTML = `⚠️ <strong>Votre ancien vœu 1 "${esc(postName(myChoice.v1))}" a été pris par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}), mieux classé.</strong><br>Ce poste n'est plus disponible en vœu 1. Veuillez saisir un nouveau vœu 1.`;
   } else {
     alertV1.style.display = 'none';
   }
@@ -581,10 +698,11 @@ function buildVoeuxForm(rank, resetSelects) {
     if (warned.length) {
       const lines = warned.map(w => {
         const winner = winnerOf(w.postId);
-        return `Vœu ${w.num} — <strong>${esc(postName(w.postId))}</strong> : choisi en vœu 1 par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}).`;
+        const rem    = remainingByName(postName(w.postId), rank);
+        return `Vœu ${w.num} — <strong>${esc(postName(w.postId))}</strong> : choisi en vœu 1 par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}). Il reste ${rem} poste${rem>1?'s':''} de ce type disponible${rem>1?'s':''}.`;
       });
       alertOther.style.display = '';
-      alertOther.innerHTML = `⚠️ Les vœux suivants ont été sélectionnés en vœu 1 par un élève mieux classé — ils vous seront probablement attribués uniquement si cet élève change de vœu :<br><br>` + lines.join('<br>');
+      alertOther.innerHTML = `⚠️ Les postes suivants ont été sélectionnés en vœu 1 par un élève mieux classé. Il peut rester des exemplaires disponibles du même poste :<br><br>` + lines.join('<br>');
     } else {
       alertOther.style.display = 'none';
     }
@@ -593,7 +711,9 @@ function buildVoeuxForm(rank, resetSelects) {
   }
 }
 
-/* ── Soumission ── */
+/* ════════════════════════════════════════
+   SOUMISSION
+════════════════════════════════════════ */
 async function submitChoice() {
   const rank = parseInt(document.getElementById('student-select').value);
   const status = document.getElementById('student-status');
@@ -601,16 +721,16 @@ async function submitChoice() {
   const v1 = document.getElementById('post-select-1').value;
   if (!v1) { status.textContent='Le vœu 1 est obligatoire.'; status.className='status err'; return; }
 
-  // Double-vérif : V1 non bloqué
   const blocked = takenV1ByBetter(rank);
   if (blocked.has(v1)) {
-    status.textContent='Ce poste vient d\'être pris par un élève mieux classé. Veuillez en choisir un autre.';
+    status.textContent='Ce poste vient d\'être pris. Veuillez en choisir un autre.';
     status.className='status err';
     buildVoeuxForm(rank, false); return;
   }
 
   const student = students.find(s=>s.rank===rank);
   if (!student) return;
+
   const entry = { rank, name: student.name, ts: Date.now() };
   for (let i = 1; i <= NB_VOEUX; i++) entry['v'+i] = document.getElementById('post-select-'+i).value || '';
 
@@ -626,30 +746,28 @@ async function submitChoice() {
   setTimeout(()=>{ status.textContent=''; }, 3000);
 }
 
-/* ── Table élève ── */
+/* ════════════════════════════════════════
+   TABLES
+════════════════════════════════════════ */
 function renderStudentTable() {
   const q = (document.getElementById('st-search').value||'').toLowerCase();
   const myRank = parseInt(document.getElementById('student-select').value)||0;
   const filtered = choices.filter(c => {
     if (!q) return true;
-    const p1=posts.find(p=>p.id===c.v1);
+    const p1 = posts.find(p=>p.id===c.v1);
     return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
   });
   const el = document.getElementById('student-choices-table');
   if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
-
-  // En-têtes dynamiques selon NB_VOEUX
   const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th>Vœu ${i+1}</th>`).join('');
   const rows = filtered.map(c => {
     const isMe = c.rank === myRank;
-    const evictedV1 = isEvictedV1(c);
-    const otherEvicted = new Set(evictedOtherVoeux(c).map(w=>w.num));
+    const evV1 = isEvictedV1(c);
+    const otherEv = new Set(evictedOtherVoeux(c).map(w=>w.num));
     const cells = [...Array(NB_VOEUX)].map((_,i) => {
-      const n = i+1;
-      const pid = c['v'+n];
-      const pn = pid ? esc(postName(pid)) : '—';
-      if (n===1 && evictedV1)        return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1 && otherEvicted.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠ pris en V1)</span></td>`;
+      const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
+      if (n===1&&evV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
+      if (n>1&&otherEv.has(n))  return `<td>${pn} <span class="evicted-warn">(⚠ pris en V1)</span></td>`;
       return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
     }).join('');
     return `<tr style="${isMe?'background:var(--green-lt);':''}">
@@ -661,7 +779,6 @@ function renderStudentTable() {
   el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-/* ── Table admin ── */
 function renderChoicesTable() {
   const q = (document.getElementById('adm-search')?.value||'').toLowerCase();
   const filtered = choices.filter(c => {
@@ -671,17 +788,16 @@ function renderChoicesTable() {
   });
   const el = document.getElementById('choices-table'); if (!el) return;
   document.getElementById('adm-voted').textContent   = choices.length;
-  document.getElementById('adm-evicted').textContent = choices.filter(c=>isEvictedV1(c)).length;
   document.getElementById('adm-waiting').textContent = Math.max(0, students.length-choices.length);
   if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré.</div>'; return; }
   const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th>V${i+1}</th>`).join('');
   const rows = filtered.map(c => {
-    const evictedV1 = isEvictedV1(c);
-    const otherEv   = new Set(evictedOtherVoeux(c).map(w=>w.num));
+    const evV1 = isEvictedV1(c);
+    const otherEv = new Set(evictedOtherVoeux(c).map(w=>w.num));
     const cells = [...Array(NB_VOEUX)].map((_,i) => {
       const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
-      if (n===1&&evictedV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1&&otherEv.has(n))       return `<td>${pn} <span class="evicted-warn">(⚠V1)</span></td>`;
+      if (n===1&&evV1)         return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
+      if (n>1&&otherEv.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠V1)</span></td>`;
       return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
     }).join('');
     return `<tr>
@@ -695,19 +811,20 @@ function renderChoicesTable() {
   el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}<th>Heure</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-/* ── Actions admin ── */
+/* ════════════════════════════════════════
+   ACTIONS ADMIN
+════════════════════════════════════════ */
 async function importStudents() {
   const lines = document.getElementById('students-bulk').value.trim().split('\n').filter(l=>l.trim());
   const toImport = [];
   for (const line of lines) {
     const parts=line.split(';'); if(parts.length<2)continue;
     const rank=parseInt(parts[0].trim()), name=parts.slice(1).join(';').trim();
-    if(!rank||!name)continue;
-    toImport.push({rank,name});
+    if(!rank||!name)continue; toImport.push({rank,name});
   }
-  if (!toImport.length) { setStatus('students-status','Format invalide.','err'); return; }
-  if (db) { const u={}; toImport.forEach(s=>{u[`ira/students/${s.rank}`]=s;}); await db.ref().update(u); }
-  else { toImport.forEach(ns=>{const i=students.findIndex(s=>s.rank===ns.rank);if(i>=0)students[i]=ns;else students.push(ns);}); students.sort((a,b)=>a.rank-b.rank); LS.set('students',students); renderStudents(); }
+  if(!toImport.length){setStatus('students-status','Format invalide.','err');return;}
+  if(db){const u={};toImport.forEach(s=>{u[`ira/students/${s.rank}`]=s;});await db.ref().update(u);}
+  else{toImport.forEach(ns=>{const i=students.findIndex(s=>s.rank===ns.rank);if(i>=0)students[i]=ns;else students.push(ns);});students.sort((a,b)=>a.rank-b.rank);LS.set('students',students);renderStudents();}
   document.getElementById('students-bulk').value='';
   setStatus('students-status',`${toImport.length} élève(s) importé(s).`,'ok');
 }
@@ -715,16 +832,15 @@ async function importStudents() {
 async function importPosts() {
   const lines = document.getElementById('posts-bulk').value.trim().split('\n').filter(l=>l.trim());
   const toImport = [];
-  // L'ordre de départ est max(order existant) + 1, 2, ...
   const maxOrder = posts.length ? Math.max(...posts.map(p=>p.order||0)) : 0;
-  lines.forEach((line,idx) => {
+  lines.forEach((line,idx)=>{
     const parts=line.split('|'), name=parts[0].trim();
     if(!name)return;
-    toImport.push({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), name, ministry:parts[1]?.trim()||'', order: maxOrder+idx+1});
+    toImport.push({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), name, ministry:parts[1]?.trim()||'', order:maxOrder+idx+1});
   });
-  if (!toImport.length) { setStatus('posts-status','Aucun poste valide.','err'); return; }
-  if (db) { const u={}; toImport.forEach(p=>{u[`ira/posts/${p.id}`]=p;}); await db.ref().update(u); }
-  else { posts=[...posts,...toImport].sort((a,b)=>(a.order||0)-(b.order||0)); LS.set('posts',posts); renderPosts(); }
+  if(!toImport.length){setStatus('posts-status','Aucun poste valide.','err');return;}
+  if(db){const u={};toImport.forEach(p=>{u[`ira/posts/${p.id}`]=p;});await db.ref().update(u);}
+  else{posts=[...posts,...toImport].sort((a,b)=>(a.order||0)-(b.order||0));LS.set('posts',posts);renderPosts();}
   document.getElementById('posts-bulk').value='';
   setStatus('posts-status',`${toImport.length} poste(s) importé(s).`,'ok');
 }
