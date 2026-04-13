@@ -302,7 +302,6 @@
     <div id="student-ui">
       <div class="stats">
         <div class="stat"><div class="stat-label">Élèves ayant saisi leurs voeux</div><div class="stat-value" id="st-voted">—</div></div>
-        <div class="stat"><div class="stat-label">Total vœux</div><div class="stat-value" id="st-total">—</div></div>
         <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
       </div>
 
@@ -505,7 +504,6 @@ function renderStudentScreen() {
   if (!accessOpen) { locked.style.display=''; ui.style.display='none'; return; }
   locked.style.display='none'; ui.style.display='';
   document.getElementById('st-voted').textContent = choices.length;
-  document.getElementById('st-total').textContent = choices.reduce((n,c)=>n+[...Array(NB_VOEUX)].filter((_,i)=>c['v'+(i+1)]).length,0);
   renderStudentTable();
 }
 
