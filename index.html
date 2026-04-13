@@ -35,10 +35,10 @@
   .logo { font-size: 13px; font-weight: 500; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
   .logo span { color: var(--green); }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
-  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; letter-spacing: 0.01em; }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
   .screen { display: none; }
   .screen.active { display: block; }
-  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
   .tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 10px 18px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: color .15s, border-color .15s; margin-bottom: -1px; }
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--green); border-bottom-color: var(--green); }
@@ -74,7 +74,6 @@
   .badge-green { background: var(--green-bg); color: var(--green); }
   .badge-gray  { background: var(--surface2); color: var(--text2); }
   .badge-amber { background: var(--amber-bg); color: var(--amber); }
-  .badge-red   { background: var(--red-bg); color: var(--red); }
   .status { font-size: 12px; min-height: 18px; margin-top: 8px; font-weight: 500; }
   .ok  { color: var(--green); }
   .err { color: var(--red); }
@@ -93,11 +92,18 @@
   code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; }
   .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Vœux form */
   .voeu-row { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
   .voeu-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text2); text-align: center; }
-  .voeu-evicted { background: var(--red-bg) !important; border-color: #e0b0b0 !important; }
-  .alert-evicted { background: var(--red-bg); border: 1px solid #e0b0b0; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: var(--red); font-weight: 500; margin-top: 10px; display: none; }
+
+  /* Alerte éviction */
+  .alert-box { border-radius: var(--radius); padding: 12px 16px; font-size: 13px; font-weight: 500; margin-bottom: 14px; display: none; }
+  .alert-red { background: var(--red-bg); border: 1px solid #e0b0b0; color: var(--red); }
+
+  /* Table : vœu évincé en rouge */
   .evicted-text { color: var(--red); font-weight: 600; }
+
   @media (max-width: 560px) {
     .stats { grid-template-columns: 1fr 1fr; }
     .stats .stat:last-child { grid-column: span 2; }
@@ -207,7 +213,7 @@
     <div id="tab-choices" class="admin-tab">
       <div class="stats">
         <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="adm-voted">0</div></div>
-        <div class="stat"><div class="stat-label">Vœux évincés (V1)</div><div class="stat-value" id="adm-evicted">0</div></div>
+        <div class="stat"><div class="stat-label">V1 évincés</div><div class="stat-value" id="adm-evicted">0</div></div>
         <div class="stat"><div class="stat-label">En attente</div><div class="stat-value" id="adm-waiting">—</div></div>
       </div>
       <div class="table-wrap">
@@ -244,7 +250,7 @@
       </div>
       <div class="card">
         <div class="card-title">Exporter les vœux</div>
-        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Téléchargez un fichier CSV avec l'ensemble des vœux (inclut colonne "Évincé").</p>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Téléchargez un fichier CSV avec l'ensemble des vœux.</p>
         <button class="btn" onclick="exportCSV()">Télécharger CSV</button>
       </div>
     </div>
@@ -284,12 +290,17 @@
             <option value="">— Choisir mon nom —</option>
           </select>
         </div>
+
         <div id="voeux-form" style="display:none;">
-          <div style="margin:4px 0 14px;">
+          <!-- Alerte : ancien V1 pris par un meilleur rang -->
+          <div class="alert-box alert-red" id="eviction-alert"></div>
+
+          <div style="margin-bottom:14px;">
             <div class="voeu-row">
               <div class="voeu-num">V1</div>
-              <select id="post-select-1" onchange="onVoeuChange()"><option value="">— Vœu 1 (prioritaire) —</option></select>
+              <select id="post-select-1"><option value="">— Vœu 1 (prioritaire) —</option></select>
             </div>
+            <div style="font-size:11px;color:var(--text3);margin:-6px 0 10px 46px;">Seuls les postes non encore réservés par un élève mieux classé sont disponibles en vœu 1.</div>
             <div class="voeu-row">
               <div class="voeu-num">V2</div>
               <select id="post-select-2"><option value="">— Vœu 2 (optionnel) —</option></select>
@@ -299,8 +310,8 @@
               <select id="post-select-3"><option value="">— Vœu 3 (optionnel) —</option></select>
             </div>
           </div>
-          <div class="alert-evicted" id="eviction-alert"></div>
-          <div class="flex-gap" style="margin-top:14px;">
+
+          <div class="flex-gap">
             <button class="btn btn-green" onclick="submitChoice()">Enregistrer mes vœux</button>
             <span class="status" id="student-status"></span>
           </div>
@@ -324,12 +335,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
-let students  = [];
-let posts     = [];
-let choices   = [];
+let students   = [];
+let posts      = [];
+let choices    = [];
 let accessOpen = false;
-let db = null;
+let db         = null;
 
+/* ── Firebase ── */
 function initFirebase() {
   if (!FIREBASE_CONFIGURED) { loadLocalFallback(); return; }
   try {
@@ -339,12 +351,10 @@ function initFirebase() {
     setupListeners();
   } catch(e) { setSyncLabel('Erreur Firebase', false); }
 }
-
 function setSyncLabel(t, loading) {
   document.getElementById('sync-label').textContent = t;
   document.getElementById('sync-loader').style.display = loading ? '' : 'none';
 }
-
 function setupListeners() {
   ['students','posts','choices','settings'].forEach(path => {
     db.ref('ira/'+path).on('value', snap => {
@@ -363,6 +373,7 @@ function setupListeners() {
   });
 }
 
+/* ── Local fallback ── */
 const LS = {
   get: k => { try { return JSON.parse(localStorage.getItem('ira_'+k)); } catch(e) { return null; } },
   set: (k,v) => localStorage.setItem('ira_'+k, JSON.stringify(v))
@@ -377,12 +388,12 @@ function loadLocalFallback() {
   refreshAll();
 }
 
+/* ── Navigation ── */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (id === 'screen-student') refreshAll();
 }
-
 function switchAdminTab(tabId, btn) {
   document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -390,12 +401,11 @@ function switchAdminTab(tabId, btn) {
   btn.classList.add('active');
   if (tabId === 'tab-choices') renderChoicesTable();
 }
-
 async function tryAdmin() {
   const pin = document.getElementById('pin-input').value;
   let stored = 'admin2024';
   if (db) { try { const s = await db.ref('ira/settings/pin').get(); if (s.val()) stored = s.val(); } catch(e){} }
-  else { stored = LS.get('pin') || 'admin2024'; }
+  else stored = LS.get('pin') || 'admin2024';
   if (pin === stored) {
     document.getElementById('pin-input').value = '';
     document.getElementById('pin-err').textContent = '';
@@ -405,27 +415,32 @@ async function tryAdmin() {
   }
 }
 
-/* ── Éviction : un élève est évincé sur son V1 si un élève de MEILLEUR rang (rang plus petit) a le même V1 ── */
+/* ── Logique métier ──
+   takenV1(rank) : ensemble des postIds déjà pris en V1 par des élèves de rang STRICTEMENT inférieur (mieux classés)
+   isEvicted(choice) : vrai si son V1 est dans takenV1 de son rang */
+function takenV1ByBetter(rank) {
+  const s = new Set();
+  choices.forEach(c => { if (c.rank < rank && c.v1) s.add(c.v1); });
+  return s;
+}
 function isEvicted(choice) {
   if (!choice.v1) return false;
   return choices.some(c => c.rank < choice.rank && c.v1 === choice.v1);
 }
-
-function winnerOfPost(postId) {
-  const claimants = choices.filter(c => c.v1 === postId);
-  if (!claimants.length) return null;
-  return claimants.reduce((best, c) => c.rank < best.rank ? c : best);
+function winnerOf(postId) {
+  return choices.filter(c => c.v1 === postId).reduce((best, c) => (!best || c.rank < best.rank) ? c : best, null);
 }
 
+/* ── Refresh global ── */
 function refreshAll() {
   renderStudents();
   renderPosts();
   renderStudentScreen();
-  // Refresh form if a student is selected
   const rank = parseInt(document.getElementById('student-select').value);
-  if (rank) onStudentSelect(false);
+  if (rank) buildVoeuxForm(rank, false);
 }
 
+/* ── Render listes admin ── */
 function renderStudents() {
   document.getElementById('students-count').textContent = students.length;
   const sel = document.getElementById('student-select');
@@ -437,14 +452,12 @@ function renderStudents() {
     sel.appendChild(o);
   });
   if (prev) sel.value = prev;
-
   const el = document.getElementById('students-table');
   if (!students.length) { el.innerHTML = '<div class="empty">Aucun élève enregistré.</div>'; return; }
   el.innerHTML = `<table><thead><tr><th>Rang</th><th>Nom</th><th></th></tr></thead><tbody>` +
     students.map(s => `<tr><td><span class="badge badge-gray">${s.rank}</span></td><td>${esc(s.name)}</td><td><button class="del-btn" onclick="delStudent(${s.rank})">✕</button></td></tr>`).join('') +
     `</tbody></table>`;
 }
-
 function renderPosts() {
   document.getElementById('posts-count').textContent = posts.length;
   const el = document.getElementById('posts-table');
@@ -455,6 +468,7 @@ function renderPosts() {
     `</tbody></table>`;
 }
 
+/* ── Render écran élève ── */
 function renderStudentScreen() {
   const locked = document.getElementById('student-locked');
   const ui     = document.getElementById('student-ui');
@@ -462,12 +476,55 @@ function renderStudentScreen() {
   if (!accessOpen) { locked.style.display = ''; ui.style.display = 'none'; return; }
   locked.style.display = 'none'; ui.style.display = '';
   document.getElementById('st-voted').textContent = choices.length;
-  document.getElementById('st-total').textContent = choices.reduce((n,c) => n + [c.v1,c.v2,c.v3].filter(Boolean).length, 0);
-  // Populate post dropdowns
-  [1,2,3].forEach(i => {
+  document.getElementById('st-total').textContent = choices.reduce((n,c)=>n+[c.v1,c.v2,c.v3].filter(Boolean).length,0);
+  renderStudentTable();
+}
+
+/* ── Construction du formulaire de vœux pour un élève ──
+   resetSelects=true : recharge les valeurs sauvegardées depuis Firebase
+   resetSelects=false : conserve les valeurs déjà saisies dans le formulaire */
+function onStudentSelect() {
+  const rank = parseInt(document.getElementById('student-select').value);
+  const form = document.getElementById('voeux-form');
+  if (!rank) { form.style.display = 'none'; return; }
+  form.style.display = '';
+  buildVoeuxForm(rank, true);
+}
+
+function buildVoeuxForm(rank, resetSelects) {
+  const myChoice = choices.find(c => c.rank === rank);
+  const blocked  = takenV1ByBetter(rank); // postIds interdits en V1
+
+  /* ── Alerte si ancien V1 est maintenant bloqué ── */
+  const alert = document.getElementById('eviction-alert');
+  if (myChoice && myChoice.v1 && blocked.has(myChoice.v1)) {
+    const winner = winnerOf(myChoice.v1);
+    const postName = posts.find(p => p.id === myChoice.v1)?.name || '';
+    alert.style.display = '';
+    alert.innerHTML = `⚠️ <strong>Votre vœu 1 "${esc(postName)}" a été pris par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}), mieux classé que vous.</strong><br>Ce poste n'est plus disponible en vœu 1. Veuillez choisir un autre vœu 1.`;
+  } else {
+    alert.style.display = 'none';
+  }
+
+  /* ── Dropdown V1 : on retire les postes bloqués ── */
+  const sel1 = document.getElementById('post-select-1');
+  const prevV1 = resetSelects ? (myChoice?.v1 || '') : sel1.value;
+  sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
+  posts.forEach(p => {
+    if (blocked.has(p.id)) return; // poste interdit en V1 : on ne l'ajoute pas
+    const o = document.createElement('option');
+    o.value = p.id;
+    o.textContent = p.name + (p.ministry ? ` (${p.ministry})` : '');
+    sel1.appendChild(o);
+  });
+  // Si l'ancien V1 est bloqué, on ne le présélectionne pas → l'élève doit choisir
+  if (prevV1 && !blocked.has(prevV1)) sel1.value = prevV1;
+
+  /* ── Dropdowns V2 et V3 : tous les postes disponibles ── */
+  [2,3].forEach(i => {
     const sel = document.getElementById('post-select-'+i);
-    const prev = sel.value;
-    sel.innerHTML = `<option value="">— Vœu ${i}${i===1?' (prioritaire)':' (optionnel)'} —</option>`;
+    const prev = resetSelects ? (i===2 ? myChoice?.v2 : myChoice?.v3) || '' : sel.value;
+    sel.innerHTML = `<option value="">— Vœu ${i} (optionnel) —</option>`;
     posts.forEach(p => {
       const o = document.createElement('option');
       o.value = p.id;
@@ -476,41 +533,9 @@ function renderStudentScreen() {
     });
     if (prev) sel.value = prev;
   });
-  renderStudentTable();
 }
 
-function onStudentSelect(reset = true) {
-  const rank = parseInt(document.getElementById('student-select').value);
-  const form = document.getElementById('voeux-form');
-  if (!rank) { form.style.display = 'none'; return; }
-  form.style.display = '';
-  if (reset) {
-    const myChoice = choices.find(c => c.rank === rank);
-    document.getElementById('post-select-1').value = myChoice?.v1 || '';
-    document.getElementById('post-select-2').value = myChoice?.v2 || '';
-    document.getElementById('post-select-3').value = myChoice?.v3 || '';
-  }
-  onVoeuChange();
-}
-
-function onVoeuChange() {
-  const rank = parseInt(document.getElementById('student-select').value);
-  if (!rank) return;
-  const v1    = document.getElementById('post-select-1').value;
-  const alert = document.getElementById('eviction-alert');
-  const sel1  = document.getElementById('post-select-1');
-  if (!v1) { alert.style.display = 'none'; sel1.classList.remove('voeu-evicted'); return; }
-  const winner = winnerOfPost(v1);
-  if (winner && winner.rank < rank) {
-    alert.style.display = '';
-    alert.textContent = `⚠️ Votre vœu 1 a déjà été sélectionné par l'élève de rang ${winner.rank} (${esc(winner.name)}), mieux classé que vous. Si vous le conservez, il vous sera probablement attribué uniquement si cet élève change de vœu.`;
-    sel1.classList.add('voeu-evicted');
-  } else {
-    alert.style.display = 'none';
-    sel1.classList.remove('voeu-evicted');
-  }
-}
-
+/* ── Soumission ── */
 async function submitChoice() {
   const rank = parseInt(document.getElementById('student-select').value);
   const v1   = document.getElementById('post-select-1').value;
@@ -519,6 +544,16 @@ async function submitChoice() {
   const status = document.getElementById('student-status');
   if (!rank) { status.textContent = 'Sélectionnez votre nom.'; status.className = 'status err'; return; }
   if (!v1)   { status.textContent = 'Le vœu 1 est obligatoire.'; status.className = 'status err'; return; }
+
+  // Double-vérification : V1 non bloqué au moment de la soumission
+  const blocked = takenV1ByBetter(rank);
+  if (blocked.has(v1)) {
+    status.textContent = 'Ce poste vient d\'être pris par un élève mieux classé. Veuillez en choisir un autre.';
+    status.className = 'status err';
+    buildVoeuxForm(rank, false);
+    return;
+  }
+
   const student = students.find(s => s.rank === rank);
   if (!student) return;
   const entry = { rank, name: student.name, v1, v2: v2||'', v3: v3||'', ts: Date.now() };
@@ -535,6 +570,7 @@ async function submitChoice() {
   setTimeout(() => { status.textContent = ''; }, 3000);
 }
 
+/* ── Table élève ── */
 function renderStudentTable() {
   const q = (document.getElementById('st-search').value||'').toLowerCase();
   const myRank = parseInt(document.getElementById('student-select').value)||0;
@@ -552,9 +588,9 @@ function renderStudentTable() {
       const isMe = c.rank === myRank;
       const v1html = evicted
         ? `<span class="evicted-text">⚠ ${p1?esc(p1.name):'—'}</span>`
-        : `${p1?esc(p1.name):'—'}`;
-      return `<tr style="${isMe?'background:var(--green-lt);':'' }">
-        <td><span class="badge badge-gray">${c.rank}</span>${isMe?' <span style="font-size:10px;color:var(--green);">moi</span>':''}</td>
+        : (p1?esc(p1.name):'—');
+      return `<tr style="${isMe?'background:var(--green-lt);':''}">
+        <td><span class="badge badge-gray">${c.rank}</span>${isMe?'&nbsp;<span style="font-size:10px;color:var(--green);">moi</span>':''}</td>
         <td style="${isMe?'font-weight:600;':''}">${esc(c.name)}</td>
         <td>${v1html}</td>
         <td style="color:var(--text2);font-size:12px;">${p2?esc(p2.name):'—'}</td>
@@ -563,6 +599,7 @@ function renderStudentTable() {
     }).join('') + `</tbody></table>`;
 }
 
+/* ── Table admin ── */
 function renderChoicesTable() {
   const q = (document.getElementById('adm-search')?.value||'').toLowerCase();
   const filtered = choices.filter(c => {
@@ -572,9 +609,8 @@ function renderChoicesTable() {
   });
   const el = document.getElementById('choices-table');
   if (!el) return;
-  const evictedCount = choices.filter(c => isEvicted(c)).length;
   document.getElementById('adm-voted').textContent   = choices.length;
-  document.getElementById('adm-evicted').textContent = evictedCount;
+  document.getElementById('adm-evicted').textContent = choices.filter(c=>isEvicted(c)).length;
   document.getElementById('adm-waiting').textContent = Math.max(0, students.length - choices.length);
   if (!filtered.length) { el.innerHTML = '<div class="empty">Aucun vœu enregistré.</div>'; return; }
   el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th><th>Vœu 1</th><th>Vœu 2</th><th>Vœu 3</th><th>Heure</th><th></th></tr></thead><tbody>` +
@@ -593,6 +629,7 @@ function renderChoicesTable() {
     }).join('') + `</tbody></table>`;
 }
 
+/* ── Actions admin ── */
 async function importStudents() {
   const lines = document.getElementById('students-bulk').value.trim().split('\n').filter(l=>l.trim());
   const toImport = [];
@@ -615,7 +652,6 @@ async function importStudents() {
   document.getElementById('students-bulk').value = '';
   setStatus('students-status',`${toImport.length} élève(s) importé(s).`,'ok');
 }
-
 async function importPosts() {
   const lines = document.getElementById('posts-bulk').value.trim().split('\n').filter(l=>l.trim());
   const toImport = [];
@@ -635,20 +671,17 @@ async function importPosts() {
   document.getElementById('posts-bulk').value = '';
   setStatus('posts-status',`${toImport.length} poste(s) importé(s).`,'ok');
 }
-
 async function clearStudents() { if(!confirm('Effacer tous les élèves ?'))return; if(db)await db.ref('ira/students').remove(); else{students=[];LS.set('students',[]);renderStudents();} }
 async function clearPosts()    { if(!confirm('Effacer tous les postes ?'))return;  if(db)await db.ref('ira/posts').remove();    else{posts=[];LS.set('posts',[]);renderPosts();} }
 async function delStudent(rank){ if(db)await db.ref(`ira/students/${rank}`).remove(); else{students=students.filter(s=>s.rank!==rank);LS.set('students',students);renderStudents();} }
 async function delPost(id)     { if(db)await db.ref(`ira/posts/${id}`).remove();      else{posts=posts.filter(p=>p.id!==id);LS.set('posts',posts);renderPosts();} }
 async function delChoice(rank) { if(!confirm('Supprimer les vœux de cet élève ?'))return; if(db)await db.ref(`ira/choices/${rank}`).remove(); else{choices=choices.filter(c=>c.rank!==rank);LS.set('choices',choices);refreshAll();} }
 async function resetChoices()  { if(!confirm('Réinitialiser TOUS les vœux ?'))return; if(db)await db.ref('ira/choices').remove(); else{choices=[];LS.set('choices',[]);refreshAll();} }
-
 async function toggleAccess() {
   const val = document.getElementById('access-toggle').checked;
   if (db) await db.ref('ira/settings/accessOpen').set(val);
   else { accessOpen=val; LS.set('access',val); renderStudentScreen(); }
 }
-
 async function changePin() {
   const p1=document.getElementById('new-pin').value, p2=document.getElementById('confirm-pin').value;
   if (!p1) { setStatus('pin-change-status','Entrez un code.','err'); return; }
@@ -657,9 +690,8 @@ async function changePin() {
   document.getElementById('new-pin').value=''; document.getElementById('confirm-pin').value='';
   setStatus('pin-change-status','Code modifié.','ok');
 }
-
 function exportCSV() {
-  const rows = [['Rang','Élève','Vœu 1','Vœu 2','Vœu 3','Vœu 1 évincé','Heure']];
+  const rows = [['Rang','Élève','Vœu 1','Vœu 2','Vœu 3','V1 évincé','Heure']];
   choices.forEach(c => {
     const p1=posts.find(p=>p.id===c.v1), p2=posts.find(p=>p.id===c.v2), p3=posts.find(p=>p.id===c.v3);
     rows.push([c.rank, c.name, p1?.name||'', p2?.name||'', p3?.name||'', isEvicted(c)?'Oui':'Non', new Date(c.ts).toLocaleString('fr-FR')]);
@@ -669,7 +701,6 @@ function exportCSV() {
   a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
   a.download = 'voeux-postes-IRA.csv'; a.click();
 }
-
 function setStatus(id, msg, cls) {
   const el=document.getElementById(id); if(!el)return;
   el.textContent=msg; el.className='status '+cls;
