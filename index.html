@@ -75,6 +75,10 @@
   td { padding: 8px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--green-lt); }
+  .zebra tr:nth-child(even) td { background: rgba(60,50,30,0.03); }
+  .zebra tr:nth-child(even):hover td { background: var(--green-lt); }
+  .site-logo-bar { display:flex; align-items:center; justify-content:center; padding:0.8rem 0; margin-bottom:0.5rem; border-bottom:1px solid var(--border); }
+  .site-logo-bar img { max-height:60px; max-width:240px; object-fit:contain; }
   .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; font-family: 'DM Mono', monospace; }
   .badge-green { background: var(--green-bg); color: var(--green); }
   .badge-gray  { background: var(--surface2); color: var(--text2); }
@@ -133,6 +137,7 @@
 </script>
 
 <div class="page">
+  <div id="site-logo-bar" class="site-logo-bar" style="display:none;"><img id="site-logo-img" src="" alt="Logo" /></div>
   <div class="logo-bar">
     <div class="logo">IRA — <span>Choix de postes</span></div>
     <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;">
@@ -250,7 +255,7 @@
     <!-- Tab Suivi -->
     <div id="tab-choices" class="admin-tab">
       <div class="stats">
-        <div class="stat"><div class="stat-label">Élèves ayant saisi leurs vœux</div><div class="stat-value" id="adm-voted">0</div></div>
+        <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="adm-voted">0</div></div>
         <div class="stat"><div class="stat-label">En attente</div><div class="stat-value" id="adm-waiting">—</div></div>
       </div>
       <div class="table-wrap">
@@ -269,6 +274,20 @@
 
     <!-- Tab Paramètres -->
     <div id="tab-settings" class="admin-tab">
+      <div class="card">
+        <div class="card-title">Logo du site</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">Importez une image (PNG, JPG, SVG). Elle s'affichera en haut de toutes les pages.</p>
+        <div class="flex-gap">
+          <input type="file" id="logo-file-input" accept="image/*" style="display:none;" onchange="handleLogoUpload(this)" />
+          <button class="btn" onclick="document.getElementById('logo-file-input').click()">Choisir une image</button>
+          <button class="btn btn-red btn-sm" onclick="removeLogo()">Supprimer le logo</button>
+        </div>
+        <div id="logo-preview" style="margin-top:12px;display:none;">
+          <p style="font-size:12px;color:var(--text2);margin-bottom:6px;">Aperçu :</p>
+          <img id="logo-preview-img" src="" style="max-height:60px;max-width:240px;object-fit:contain;border-radius:6px;border:1px solid var(--border);" />
+        </div>
+        <div class="status" id="logo-status"></div>
+      </div>
       <div class="card">
         <div class="card-title">Accès élèves</div>
         <div class="flex-gap">
@@ -315,7 +334,7 @@
 
     <div id="student-ui">
       <div class="stats">
-        <div class="stat"><div class="stat-label">Élèves ayant saisi leurs vœux</div><div class="stat-value" id="st-voted">—</div></div>
+        <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="st-voted">—</div></div>
         <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
       </div>
 
@@ -378,6 +397,7 @@ function setupListeners() {
         accessOpen = v?.accessOpen === true;
         const tog = document.getElementById('access-toggle');
         if (tog) tog.checked = accessOpen;
+        applyLogo(v?.logo || null);
       }
       refreshAll();
       setSyncLabel('Synchronisé · ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}), false);
@@ -396,6 +416,7 @@ function loadLocalFallback() {
   accessOpen = LS.get('access')   === true;
   const tog = document.getElementById('access-toggle');
   if (tog) tog.checked = accessOpen;
+  applyLogo(LS.get('logo') || null);
   refreshAll();
 }
 
@@ -777,7 +798,7 @@ function renderStudentTable() {
       ${cells}
     </tr>`;
   }).join('');
-  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}</tr></thead><tbody>${rows}</tbody></table>`;
+  el.innerHTML = `<table class="zebra"><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderChoicesTable() {
@@ -807,7 +828,7 @@ function renderChoicesTable() {
       <td><button class="del-btn" onclick="delChoice(${c.rank})">✕</button></td>
     </tr>`;
   }).join('');
-  el.innerHTML = `<table><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}<th>Heure</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+  el.innerHTML = `<table class="zebra"><thead><tr><th>Rang</th><th>Élève</th>${vHeaders}<th>Heure</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 /* ══ Actions admin ══ */
@@ -933,6 +954,44 @@ function exportCSV(){
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
   a.download='voeux-postes-IRA.csv';a.click();
+}
+
+
+/* ══ Logo ══ */
+function handleLogoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    // Store in Firebase or localStorage
+    if (db) {
+      await db.ref('ira/settings/logo').set(dataUrl);
+    } else {
+      LS.set('logo', dataUrl);
+      applyLogo(dataUrl);
+    }
+    setStatus('logo-status', 'Logo enregistré.', 'ok');
+  };
+  reader.readAsDataURL(file);
+}
+async function removeLogo() {
+  if (db) await db.ref('ira/settings/logo').remove();
+  else { LS.set('logo', null); applyLogo(null); }
+  setStatus('logo-status', 'Logo supprimé.', 'ok');
+}
+function applyLogo(dataUrl) {
+  const bar = document.getElementById('site-logo-bar');
+  const img = document.getElementById('site-logo-img');
+  const prev = document.getElementById('logo-preview');
+  const prevImg = document.getElementById('logo-preview-img');
+  if (dataUrl) {
+    img.src = dataUrl; bar.style.display = '';
+    prevImg.src = dataUrl; prev.style.display = '';
+  } else {
+    img.src = ''; bar.style.display = 'none';
+    prevImg.src = ''; prev.style.display = 'none';
+  }
 }
 
 function setStatus(id,msg,cls){
