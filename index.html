@@ -262,7 +262,7 @@
         <div class="table-head">
           <span class="table-head-title">Tous les vœux</span>
           <div class="flex-gap">
-            <input type="text" id="adm-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderChoicesTable()" />
+            <input type="text" id="adm-search" placeholder="Nom ou rang (ex: 14)…" style="width:200px;height:30px;font-size:12px;" oninput="renderChoicesTable()" />
           </div>
         </div>
         <div id="choices-table"><div class="empty">Aucun vœu enregistré.</div></div>
@@ -352,7 +352,7 @@
         <div class="table-head">
           <span class="table-head-title">Vœux de la promotion</span>
           <div class="flex-gap">
-            <input type="text" id="st-search" placeholder="Rechercher…" style="width:160px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
+            <input type="text" id="st-search" placeholder="Nom ou rang (ex: 14)…" style="width:200px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
           </div>
         </div>
         <div id="student-choices-table"><div class="empty">Aucun vœu enregistré pour l'instant.</div></div>
@@ -779,7 +779,8 @@ function renderStudentTable() {
   const filtered = choices.filter(c => {
     if (!q) return true;
     const p1=posts.find(p=>p.id===c.v1);
-    return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
+    const rankMatch = String(c.rank) === q.trim();
+    return rankMatch || c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
   });
   const el = document.getElementById('student-choices-table');
   if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
@@ -806,7 +807,8 @@ function renderChoicesTable() {
   const filtered = choices.filter(c => {
     if (!q) return true;
     const p1=posts.find(p=>p.id===c.v1);
-    return c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
+    const rankMatch = String(c.rank) === q.trim();
+    return rankMatch || c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
   });
   const el = document.getElementById('choices-table'); if (!el) return;
   document.getElementById('adm-voted').textContent   = choices.length;
