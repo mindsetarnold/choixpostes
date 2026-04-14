@@ -112,6 +112,12 @@
   .student-header-pic .profile-pic,
   .student-header-pic .profile-pic-placeholder { width: 64px; height: 64px; font-size: 26px; }
 
+  /* ── Admin photo preview ── */
+  .admin-pic-row { display: flex; align-items: center; gap: 16px; }
+  .admin-pic-preview { flex-shrink: 0; }
+  .admin-pic-preview .profile-pic,
+  .admin-pic-preview .profile-pic-placeholder { width: 60px; height: 60px; font-size: 24px; }
+
   /* ── Vœux ── */
   .voeu-row { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
   .voeu-num { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text2); text-align: center; }
@@ -121,8 +127,7 @@
   .alert-red   { background: var(--red-bg);   border: 1px solid #e0b0b0; color: var(--red); }
   .alert-amber { background: var(--amber-bg); border: 1px solid #e8c87a; color: var(--amber); }
 
-  .evicted-v1   { color: var(--red);   font-weight: 600; }
-  .evicted-warn { color: var(--amber); font-weight: 500; font-size: 11px; }
+  .evicted-v1 { color: var(--red); font-weight: 600; }
 
   .empty { text-align: center; padding: 2.5rem; color: var(--text3); font-size: 13px; }
   .del-btn { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 3px 7px; border-radius: 6px; font-family: 'DM Sans', sans-serif; }
@@ -168,11 +173,10 @@
   <div id="screen-lock" class="screen active">
     <div class="lock-wrap">
       <div class="lock-box">
+        <!-- Photo affichée, pas modifiable ici -->
         <div class="profile-pic-wrap">
           <div id="lock-pic-placeholder" class="profile-pic-placeholder">🎓</div>
           <img id="lock-pic-img" class="profile-pic" style="display:none;" alt="Photo de profil" />
-          <label class="profile-pic-upload-label" for="profile-pic-file">Changer la photo</label>
-          <input type="file" id="profile-pic-file" accept="image/*" onchange="onProfilePicChange(event)" />
         </div>
         <h2>Promotion IRA</h2>
         <p>Choisissez votre mode d'accès</p>
@@ -205,6 +209,7 @@
       <button class="tab" onclick="switchAdminTab('tab-settings',this)">Paramètres</button>
     </div>
 
+    <!-- Onglet élèves -->
     <div id="tab-students" class="admin-tab" style="display:block;">
       <div class="card">
         <div class="card-title">Importer des élèves</div>
@@ -225,6 +230,7 @@
       </div>
     </div>
 
+    <!-- Onglet postes -->
     <div id="tab-posts" class="admin-tab">
       <div class="card">
         <div class="card-title">Importer des postes</div>
@@ -245,6 +251,7 @@
       </div>
     </div>
 
+    <!-- Onglet suivi vœux -->
     <div id="tab-choices" class="admin-tab">
       <div class="stats">
         <div class="stat"><div class="stat-label">Élèves ayant voté</div><div class="stat-value" id="adm-voted">0</div></div>
@@ -262,6 +269,7 @@
       </div>
     </div>
 
+    <!-- Onglet paramètres -->
     <div id="tab-settings" class="admin-tab">
       <div class="card">
         <div class="card-title">Accès élèves</div>
@@ -271,6 +279,24 @@
         </div>
         <p style="font-size:12px;color:var(--text2);margin-top:8px;">Désactivez pendant l'import. Activez quand la promotion peut commencer.</p>
       </div>
+
+      <!-- Photo de profil — admin uniquement -->
+      <div class="card">
+        <div class="card-title">Photo de profil</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Cette photo s'affiche sur l'écran de connexion et en haut de l'interface élève.</p>
+        <div class="admin-pic-row">
+          <div class="admin-pic-preview">
+            <div id="admin-pic-placeholder" class="profile-pic-placeholder">🎓</div>
+            <img id="admin-pic-img" class="profile-pic" style="display:none;" alt="Aperçu" />
+          </div>
+          <div>
+            <label class="profile-pic-upload-label" for="profile-pic-file" style="font-size:13px;text-transform:none;letter-spacing:0;color:var(--accent);cursor:pointer;">Choisir une image…</label>
+            <input type="file" id="profile-pic-file" accept="image/*" onchange="onProfilePicChange(event)" />
+            <p style="font-size:12px;color:var(--text3);margin-top:4px;">Format recommandé : carré, JPG ou PNG.</p>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title">Code administrateur</div>
         <div class="row2">
@@ -308,7 +334,7 @@
     </div>
 
     <div id="student-ui">
-      <!-- Photo centrée -->
+      <!-- Photo centrée (lecture seule) -->
       <div class="student-header-pic">
         <div id="student-pic-placeholder" class="profile-pic-placeholder">🎓</div>
         <img id="student-pic-img" class="profile-pic" style="display:none;" alt="" />
@@ -341,8 +367,7 @@
         </div>
 
         <div id="voeux-form" style="display:none;">
-          <div class="alert-box alert-red"   id="alert-v1-evicted"    style="display:none;"></div>
-          <div class="alert-box alert-amber" id="alert-other-evicted" style="display:none;"></div>
+          <div class="alert-box alert-red" id="alert-v1-evicted" style="display:none;"></div>
           <div id="voeux-selects" style="margin-bottom:14px;"></div>
           <div class="flex-gap">
             <button class="btn btn-green" onclick="submitChoice()">Enregistrer mes vœux</button>
@@ -429,7 +454,7 @@ function loadLocalFallback() {
 }
 
 /* ════════════════════════════════════════
-   PHOTO DE PROFIL
+   PHOTO DE PROFIL — admin seulement
 ════════════════════════════════════════ */
 function onProfilePicChange(event) {
   const file = event.target.files[0];
@@ -447,14 +472,21 @@ function saveProfilePic(dataUrl) {
 
 function applyProfilePic(dataUrl) {
   if (!dataUrl) return;
+  // Écran connexion
   const img1 = document.getElementById('lock-pic-img');
   const ph1  = document.getElementById('lock-pic-placeholder');
   if (img1) { img1.src = dataUrl; img1.style.display = ''; }
   if (ph1)  ph1.style.display = 'none';
+  // Interface élève
   const img2 = document.getElementById('student-pic-img');
   const ph2  = document.getElementById('student-pic-placeholder');
   if (img2) { img2.src = dataUrl; img2.style.display = ''; }
   if (ph2)  ph2.style.display = 'none';
+  // Aperçu admin
+  const img3 = document.getElementById('admin-pic-img');
+  const ph3  = document.getElementById('admin-pic-placeholder');
+  if (img3) { img3.src = dataUrl; img3.style.display = ''; }
+  if (ph3)  ph3.style.display = 'none';
 }
 
 function loadProfilePic() {
@@ -550,16 +582,6 @@ function isEvictedV1(choice) {
   return choices.some(c => c.rank < choice.rank && c.v1 === choice.v1);
 }
 
-function evictedOtherVoeux(choice) {
-  const blocked = takenV1ByBetter(choice.rank);
-  const warned  = [];
-  for (let i = 2; i <= NB_VOEUX; i++) {
-    const vid = choice['v'+i];
-    if (vid && blocked.has(vid)) warned.push({ num: i, postId: vid });
-  }
-  return warned;
-}
-
 function winnerOf(postId) {
   return choices.filter(c => c.v1 === postId)
     .reduce((best, c) => (!best || c.rank < best.rank) ? c : best, null);
@@ -569,20 +591,20 @@ function postName(id) {
   return posts.find(p => p.id === id)?.name || '';
 }
 
-// Exemplaires restants pour V1 (en tenant compte des V1 des mieux classés)
+// Exemplaires restants pour V1 (déduit des V1 des mieux classés)
 function remainingByName(name, rank) {
   const total      = posts.filter(p => p.name === name).length;
   const takenCount = choices.filter(c => c.rank < rank && c.v1 && postName(c.v1) === name).length;
   return Math.max(0, total - takenCount);
 }
 
-// Compteur de popularité V2-V5 pour un nom de poste (tous élèves confondus)
+// Combien d'élèves ont ce nom de poste dans leurs V2-V5
 function countVoeux2to5ByName(name) {
   const ids = new Set(posts.filter(p => p.name === name).map(p => p.id));
   let count = 0;
   choices.forEach(c => {
     for (let i = 2; i <= NB_VOEUX; i++) {
-      if (ids.has(c['v'+i])) count++;
+      if (ids.has(c['v'+i])) { count++; break; } // une seule fois par élève
     }
   });
   return count;
@@ -711,16 +733,19 @@ function buildVoeuxForm(rank, resetSelects) {
 }
 
 /*
-  V1  : postes individuels, filtrés (bloqués par meilleur rang exclus),
-        décompte "X dispo" pour les postes en doublon.
-  V2-V5 : une entrée par nom de poste (dédupliqué), aucune restriction de quota,
-           compteur "vœu choisi X fois" dès que ≥ 2 élèves ont ce vœu.
+  V1  : une ligne par NOM de poste (dédupliqué).
+        Filtrée si tous les exemplaires du groupe sont bloqués ou épuisés.
+        Affiche "X poste(s) restant(s)" pour les postes en doublon.
+        Disparaît quand remaining === 0.
+
+  V2-V5 : une ligne par nom, sans restriction de quota.
+           Compteur "choisi par X élève(s)" dès le premier choix.
 */
 function fillSelect(voeuNum, rank, blocked, currentValue, allCurrentValues) {
   const sel = document.getElementById('post-select-'+voeuNum);
   if (!sel) return;
 
-  // IDs déjà sélectionnés dans les autres vœux (exclusion inter-vœux)
+  // IDs déjà sélectionnés dans les autres vœux de cet élève
   const otherSelected = new Set();
   for (let i = 1; i <= NB_VOEUX; i++) {
     if (i === voeuNum) continue;
@@ -731,21 +756,34 @@ function fillSelect(voeuNum, rank, blocked, currentValue, allCurrentValues) {
   sel.innerHTML = `<option value="">— Vœu ${voeuNum}${voeuNum===1?' (prioritaire)':' (optionnel)'} —</option>`;
 
   if (voeuNum === 1) {
-    // Chaque exemplaire individuel, filtré
+    // Une ligne par nom de poste
+    const seenNames = new Set();
     posts.forEach(p => {
-      if (blocked.has(p.id)) return;
-      if (otherSelected.has(p.id)) return;
-      const total     = posts.filter(x => x.name === p.name).length;
+      if (seenNames.has(p.name)) return;
+      seenNames.add(p.name);
+
+      const group     = posts.filter(x => x.name === p.name);
       const remaining = remainingByName(p.name, rank);
+
+      // Disparaît si plus aucun exemplaire disponible
+      if (remaining === 0) return;
+
+      // Id représentatif = premier exemplaire non bloqué et non dans un autre vœu
+      const availableIds = group.map(x => x.id).filter(id => !blocked.has(id) && !otherSelected.has(id));
+      if (availableIds.length === 0) return;
+
       const o = document.createElement('option');
-      o.value = p.id;
+      o.value = availableIds[0];
       let label = p.name + (p.ministry ? ` (${p.ministry})` : '');
-      if (total > 1) label += ` — ${remaining} dispo`;
+      if (group.length > 1) {
+        label += ` — ${remaining} poste${remaining > 1 ? 's' : ''} restant${remaining > 1 ? 's' : ''}`;
+      }
       o.textContent = label;
       sel.appendChild(o);
     });
+
   } else {
-    // Une entrée par nom, sans restriction de quota
+    // V2-V5 : une ligne par nom, pas de restriction de quota
     const seenNames = new Set();
     posts.forEach(p => {
       if (seenNames.has(p.name)) return;
@@ -761,13 +799,15 @@ function fillSelect(voeuNum, rank, blocked, currentValue, allCurrentValues) {
       const o = document.createElement('option');
       o.value = repId;
       let label = p.name + (p.ministry ? ` (${p.ministry})` : '');
-      if (popularity > 1) label += ` — vœu choisi ${popularity} fois`;
+      if (popularity >= 1) {
+        label += ` — choisi par ${popularity} élève${popularity > 1 ? 's' : ''}`;
+      }
       o.textContent = label;
       sel.appendChild(o);
     });
   }
 
-  // Restaurer la valeur précédente
+  // Restaurer la valeur précédente si encore disponible
   if (currentValue) {
     const savedName = postName(currentValue);
     for (const opt of sel.options) {
@@ -792,6 +832,7 @@ function onVoeuChange() {
   updateAlerts(rank, myChoice, blocked);
 }
 
+// Alerte uniquement si le V1 enregistré a été évincé depuis
 function updateAlerts(rank, myChoice, blocked) {
   const alertV1 = document.getElementById('alert-v1-evicted');
   if (myChoice && myChoice.v1 && blocked.has(myChoice.v1)) {
@@ -800,24 +841,6 @@ function updateAlerts(rank, myChoice, blocked) {
     alertV1.innerHTML = `⚠️ <strong>Votre ancien vœu 1 "${esc(postName(myChoice.v1))}" a été pris par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}), mieux classé.</strong><br>Ce poste n'est plus disponible en vœu 1. Veuillez saisir un nouveau vœu 1.`;
   } else {
     alertV1.style.display = 'none';
-  }
-
-  const alertOther = document.getElementById('alert-other-evicted');
-  if (myChoice) {
-    const warned = evictedOtherVoeux(myChoice);
-    if (warned.length) {
-      const lines = warned.map(w => {
-        const winner = winnerOf(w.postId);
-        const rem    = remainingByName(postName(w.postId), rank);
-        return `Vœu ${w.num} — <strong>${esc(postName(w.postId))}</strong> : choisi en vœu 1 par l'élève de rang ${winner?.rank||'?'} (${esc(winner?.name||'')}). Il reste ${rem} poste${rem>1?'s':''} de ce type disponible${rem>1?'s':''}.`;
-      });
-      alertOther.style.display = '';
-      alertOther.innerHTML = `⚠️ Les postes suivants ont été sélectionnés en vœu 1 par un élève mieux classé. Il peut rester des exemplaires disponibles :<br><br>` + lines.join('<br>');
-    } else {
-      alertOther.style.display = 'none';
-    }
-  } else {
-    alertOther.style.display = 'none';
   }
 }
 
@@ -875,13 +898,11 @@ function renderStudentTable() {
   if (!filtered.length) { el.innerHTML = '<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
   const vHeaders = [...Array(NB_VOEUX)].map((_,i) => `<th>Vœu ${i+1}</th>`).join('');
   const rows = filtered.map(c => {
-    const isMe    = c.rank === myRank;
-    const evV1    = isEvictedV1(c);
-    const otherEv = new Set(evictedOtherVoeux(c).map(w => w.num));
-    const cells   = [...Array(NB_VOEUX)].map((_,i) => {
+    const isMe  = c.rank === myRank;
+    const evV1  = isEvictedV1(c);
+    const cells = [...Array(NB_VOEUX)].map((_,i) => {
       const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
-      if (n===1 && evV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1   && otherEv.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠ pris en V1)</span></td>`;
+      if (n===1 && evV1) return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
       return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
     }).join('');
     return `<tr style="${isMe?'background:var(--accent-lt);':''}">
@@ -906,12 +927,10 @@ function renderChoicesTable() {
   if (!filtered.length) { el.innerHTML = '<div class="empty">Aucun vœu enregistré.</div>'; return; }
   const vHeaders = [...Array(NB_VOEUX)].map((_,i) => `<th>V${i+1}</th>`).join('');
   const rows = filtered.map(c => {
-    const evV1    = isEvictedV1(c);
-    const otherEv = new Set(evictedOtherVoeux(c).map(w => w.num));
-    const cells   = [...Array(NB_VOEUX)].map((_,i) => {
+    const evV1  = isEvictedV1(c);
+    const cells = [...Array(NB_VOEUX)].map((_,i) => {
       const n=i+1, pid=c['v'+n], pn=pid?esc(postName(pid)):'—';
-      if (n===1 && evV1)          return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
-      if (n>1   && otherEv.has(n)) return `<td>${pn} <span class="evicted-warn">(⚠V1)</span></td>`;
+      if (n===1 && evV1) return `<td><span class="evicted-v1">⚠ ${pn}</span></td>`;
       return `<td style="${n>1?'color:var(--text2);font-size:12px;':''}">${pn}</td>`;
     }).join('');
     return `<tr>
