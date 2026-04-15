@@ -2,10 +2,6 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<link rel="icon" type="image/x-icon" href="favicon.ico" />
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Choix de postes — Promotion 50</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,8 +35,10 @@
   .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
 
   /* ── Logo placements ── */
+  /* In logo-bar: logo replaces/sits beside the IRA text */
   .logo-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
   #logo-in-bar { max-height: 40px; max-width: 160px; object-fit: contain; display: none; }
+  /* In lock screen: replaces the icon */
   #logo-in-lock { max-height: 72px; max-width: 220px; object-fit: contain; display: none; margin: 0 auto 1rem; }
   .lock-icon-wrap { margin-bottom: 1rem; }
 
@@ -117,10 +115,12 @@
   code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; }
   .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  /* Inline rank input */
   .rank-input { width: 60px; padding: 4px 8px; font-size: 13px; height: 30px; font-family: 'DM Mono', monospace; text-align: center; }
   .pin-set-input { width: 80px; padding: 4px 8px; font-size: 13px; height: 30px; font-family: 'DM Mono', monospace; text-align: center; letter-spacing: 3px; }
   .save-btn { background: var(--green-bg); border: 1px solid var(--green); color: var(--green); border-radius: var(--radius); padding: 0 10px; height: 30px; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; }
   .save-btn:hover { background: var(--green); color: #fff; }
+
 
   /* ── Onglets interface élève ── */
   .student-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
@@ -137,7 +137,6 @@
   .recap-table .zebra tr:nth-child(even) td { background: rgba(60,50,30,0.03); }
   .recap-table .zebra tr:nth-child(even):hover td { background: var(--green-lt); }
   .recap-table .zebra tr.total-row td { background: var(--bg) !important; }
-
   /* ── Layout latéral élève ── */
   .student-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start; }
   @media (max-width: 700px) { .student-layout { grid-template-columns: 1fr; } #panel-sidebar { order: -1; } }
@@ -331,20 +330,6 @@
       </div>
     </div>
 
-    <!-- Tab Récapitulatif (admin) -->
-    <div id="tab-recap" class="admin-tab">
-      <div class="table-wrap recap-table">
-        <div class="table-head">
-          <span class="table-head-title">Récapitulatif des vœux par poste</span>
-          <div class="flex-gap">
-            <input type="text" id="adm-recap-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderRecapTable('admin-recap-body')" />
-            <button class="btn btn-sm" onclick="exportRecapCSV()">Exporter CSV</button>
-          </div>
-        </div>
-        <div id="admin-recap-body"><div class="empty">Chargement…</div></div>
-      </div>
-    </div>
-
     <!-- Tab Paramètres -->
     <div id="tab-settings" class="admin-tab">
       <div class="card">
@@ -479,7 +464,7 @@ let posts      = [];
 let choices    = [];
 let accessOpen = false;
 let db         = null;
-let currentStudentRank = null;
+let currentStudentRank = null; // rang de l'élève connecté
 
 /* ══ Firebase ══ */
 function initFirebase() {
@@ -588,6 +573,7 @@ function tryStudentPin() {
   if (!student) return;
   const expectedPin = student.pin || '';
   if (!expectedPin) {
+    // Pas de PIN défini → accès libre
     loginAsStudent(rank);
   } else if (entered === expectedPin) {
     loginAsStudent(rank);
@@ -605,20 +591,30 @@ function loginAsStudent(rank) {
 }
 
 /* ══ Logique métier ══ */
+
+// Nombre de V1 pris par des élèves de MEILLEUR rang pour un nom de poste donné
 function v1TakenCountByBetter(postGroupName, rank) {
   return choices.filter(c => c.rank < rank && c.v1 && postName(c.v1) === postGroupName).length;
 }
+
+// Nombre total d'exemplaires d'un nom de poste
 function totalByName(name) {
   return posts.filter(p => p.name === name).length;
 }
+
+// Postes restants en V1 pour un nom donné (de mon point de vue)
 function remainingV1(postGroupName, rank) {
   return Math.max(0, totalByName(postGroupName) - v1TakenCountByBetter(postGroupName, rank));
 }
+
+// V1 de cet élève est-il évincé (reste = 0) ?
 function isEvictedV1(choice) {
   if (!choice.v1) return false;
   const name = postName(choice.v1);
   return remainingV1(name, choice.rank) === 0;
 }
+
+// Combien de fois un nom de poste a été choisi en V2-V5 (toutes occurrences, tous élèves)
 function v2v5ChosenCount(postGroupName) {
   let count = 0;
   choices.forEach(c => {
@@ -628,9 +624,12 @@ function v2v5ChosenCount(postGroupName) {
   });
   return count;
 }
+
 function postName(id) {
   return posts.find(p => p.id === id)?.name || '';
 }
+
+// Premier ID disponible d'un groupe de postes (non pris en V1 par mieux classés, non dans mes autres vœux)
 function firstAvailableIdInGroup(groupName, rank, otherSelected) {
   return posts.find(p => p.name === groupName && !otherSelected.has(p.id))?.id || null;
 }
@@ -646,6 +645,7 @@ function refreshAll() {
 /* ══ Render admin ══ */
 function renderStudents() {
   document.getElementById('students-count').textContent = students.length;
+  // Mise à jour du select de la page PIN
   const pinSel = document.getElementById('pin-student-select');
   if (pinSel) {
     const prev = pinSel.value;
@@ -716,6 +716,7 @@ function buildVoeuxForm(rank, resetSelects) {
   const myChoice = choices.find(c => c.rank === rank);
   const container = document.getElementById('voeux-selects');
 
+  // Créé les lignes si absent
   if (!document.getElementById('post-select-1')) {
     let html = '';
     for (let i = 1; i <= NB_VOEUX; i++) {
@@ -730,6 +731,7 @@ function buildVoeuxForm(rank, resetSelects) {
     container.innerHTML = html;
   }
 
+  // Valeurs avant rebuild
   const current = {};
   for (let i = 1; i <= NB_VOEUX; i++) current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
 
@@ -741,6 +743,7 @@ function buildVoeuxForm(rank, resetSelects) {
 }
 
 function fillAllSelects(rank, toRestore) {
+  // Calcule les IDs déjà choisis dans les autres vœux
   const getSelected = (excludeNum) => {
     const s = new Set();
     for (let i = 1; i <= NB_VOEUX; i++) {
@@ -751,6 +754,9 @@ function fillAllSelects(rank, toRestore) {
     return s;
   };
 
+  // ── V1 : postes groupés par nom, avec décompte restant, exclus si reste=0 ──
+  // V1 peut contenir tous les postes disponibles, y compris ceux déjà en V2-V5
+  // (l'exclusion inter-vœux s'applique seulement dans l'autre sens : V2-V5 excluent V1)
   const sel1 = document.getElementById('post-select-1');
   const prevV1 = toRestore?.v1 || '';
   sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
@@ -760,7 +766,8 @@ function fillAllSelects(rank, toRestore) {
     seenNamesV1.add(p.name);
     const total = totalByName(p.name);
     const remaining = remainingV1(p.name, rank);
-    if (remaining === 0) return;
+    if (remaining === 0) return; // plus de place → ne pas afficher
+    // ID représentatif : premier exemplaire disponible (sans exclusion inter-vœux pour V1)
     const repId = posts.find(gp => gp.name === p.name)?.id;
     if (!repId) return;
     const o = document.createElement('option');
@@ -770,6 +777,7 @@ function fillAllSelects(rank, toRestore) {
     o.textContent = label;
     sel1.appendChild(o);
   });
+  // Restaurer V1 si encore disponible
   if (prevV1) {
     const prevName = postName(prevV1);
     for (const opt of sel1.options) {
@@ -778,18 +786,21 @@ function fillAllSelects(rank, toRestore) {
       }
     }
   }
+  // Si V1 est maintenant un poste qui était dans V2-V5, réinitialiser ce slot
   const v1Name = postName(sel1.value);
   if (v1Name) {
     for (let i = 2; i <= NB_VOEUX; i++) {
       const si = document.getElementById('post-select-'+i);
       if (si && postName(si.value) === v1Name) si.value = '';
     }
+    // Mettre à jour toRestore pour refléter la réinitialisation
     for (let i = 2; i <= NB_VOEUX; i++) {
       const si = document.getElementById('post-select-'+i);
       if (si) toRestore['v'+i] = si.value;
     }
   }
 
+  // ── V2-V5 : postes groupés par nom, décompte "choisi par X élèves", pas de restriction ──
   for (let i = 2; i <= NB_VOEUX; i++) {
     const sel = document.getElementById('post-select-'+i);
     const prev = toRestore?.['v'+i] || '';
@@ -799,11 +810,13 @@ function fillAllSelects(rank, toRestore) {
     posts.forEach(p => {
       if (seenNames.has(p.name)) return;
       seenNames.add(p.name);
+      // Exclure si le même nom est déjà dans un autre vœu de cet élève
       const repId = posts.find(gp => gp.name === p.name && !otherSel.has(gp.id))?.id;
       if (!repId) return;
       const o = document.createElement('option');
       o.value = repId;
-      o.textContent = p.name;
+      const label = p.name;
+      o.textContent = label;
       sel.appendChild(o);
     });
     if (prev) {
@@ -821,6 +834,7 @@ function onVoeuChange() {
   if (!currentStudentRank) return;
   const current = {};
   for (let i = 1; i <= NB_VOEUX; i++) current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
+  // Si V1 vient de changer, réinitialiser les vœux suivants qui ont le même nom
   const v1Name = postName(current.v1);
   if (v1Name) {
     for (let i = 2; i <= NB_VOEUX; i++) {
@@ -883,6 +897,7 @@ function renderStudentTable() {
     if (!q) return true;
     const rankMatch = String(c.rank) === q.trim();
     if (rankMatch || c.name.toLowerCase().includes(q)) return true;
+    // Search across all voeux post names
     for (let i = 1; i <= NB_VOEUX; i++) {
       const pid = c['v'+i];
       if (pid && postName(pid).toLowerCase().includes(q)) return true;
@@ -954,6 +969,7 @@ async function importStudents() {
   if (db) {
     const u={};
     toImport.forEach(s => {
+      // Conserver le PIN existant si l'élève existe déjà
       const existing = students.find(e=>e.rank===s.rank);
       u[`ira/students/${s.rank}`] = { ...s, pin: existing?.pin||'' };
     });
@@ -982,6 +998,7 @@ async function updateRank(oldRank, newRankStr) {
   if (db) {
     await db.ref(`ira/students/${oldRank}`).remove();
     await db.ref(`ira/students/${newRank}`).set(updated);
+    // Mettre à jour le choix associé si existant
     const choice = choices.find(c=>c.rank===oldRank);
     if (choice) {
       const updatedChoice = {...choice, rank: newRank, name: updated.name};
@@ -1003,11 +1020,12 @@ async function updatePin(rank, pinValue) {
   const pin = pinValue.replace(/\D/g,'').slice(0,4);
   const student = students.find(s=>s.rank===rank);
   if (!student) return;
+  const updated = {...student, pin};
   if (db) {
     await db.ref(`ira/students/${rank}/pin`).set(pin);
   } else {
     const i=students.findIndex(s=>s.rank===rank);
-    if(i>=0) students[i]={...students[i], pin};
+    if(i>=0) students[i]=updated;
     LS.set('students',students);
   }
 }
@@ -1073,6 +1091,7 @@ function exportCSV(){
   a.download='voeux-postes-IRA.csv';a.click();
 }
 
+
 /* ══ Logo ══ */
 function handleLogoUpload(input) {
   const file = input.files[0];
@@ -1080,6 +1099,7 @@ function handleLogoUpload(input) {
   const reader = new FileReader();
   reader.onload = async (e) => {
     const dataUrl = e.target.result;
+    // Store in Firebase or localStorage
     if (db) {
       await db.ref('ira/settings/logo').set(dataUrl);
     } else {
@@ -1096,15 +1116,22 @@ async function removeLogo() {
   setStatus('logo-status', 'Logo supprimé.', 'ok');
 }
 function applyLogo(dataUrl) {
+  // 1. Logo in top bar (admin/student screens)
   const logoBar  = document.getElementById('logo-in-bar');
+  // 2. Logo on lock screen (replaces emoji)
   const logoLock = document.getElementById('logo-in-lock');
   const lockEmoji= document.getElementById('lock-emoji');
+  // 3. Admin preview
   const prev     = document.getElementById('logo-preview');
   const prevImg  = document.getElementById('logo-preview-img');
+
   if (dataUrl) {
+    // Top bar
     if (logoBar)  { logoBar.src = dataUrl;  logoBar.style.display = 'block'; }
+    // Lock screen : show logo, hide emoji
     if (logoLock) { logoLock.src = dataUrl; logoLock.style.display = 'block'; }
     if (lockEmoji){ lockEmoji.style.display = 'none'; }
+    // Admin preview
     if (prevImg)  { prevImg.src = dataUrl;  prev.style.display = ''; }
   } else {
     if (logoBar)  { logoBar.src = '';  logoBar.style.display = 'none'; }
@@ -1113,6 +1140,8 @@ function applyLogo(dataUrl) {
     if (prevImg)  { prevImg.src = '';  prev.style.display = 'none'; }
   }
 }
+
+
 
 /* ══ Onglets interface élève ══ */
 function switchStudentTab(tabId, btn) {
@@ -1129,11 +1158,13 @@ function switchStudentTab(tabId, btn) {
 
 /* ══ Tableau récapitulatif ══ */
 function buildRecapData(q) {
+  // One row per unique post name, grouped
   const seen = new Set();
   const rows = [];
   posts.forEach(p => {
     if (seen.has(p.name)) return;
     seen.add(p.name);
+    // Count choices per voeu level
     const counts = Array(NB_VOEUX).fill(0);
     choices.forEach(c => {
       for (let i = 1; i <= NB_VOEUX; i++) {
@@ -1143,6 +1174,7 @@ function buildRecapData(q) {
     const total = counts.reduce((s,n)=>s+n,0);
     rows.push({ univers: p.univers||'', sousGroupe: p.sousGroupe||'', name: p.name, counts, total });
   });
+  // Filter
   if (q) {
     const qq = q.toLowerCase();
     return rows.filter(r =>
@@ -1165,6 +1197,7 @@ function renderRecapTable(containerId) {
   const rows = buildRecapData(q);
   if (!rows.length) { el.innerHTML='<div class="empty">Aucun résultat.</div>'; return; }
 
+  // Sort: univers → sousGroupe → name
   rows.sort((a,b)=>{
     if (a.univers!==b.univers) return a.univers.localeCompare(b.univers);
     if (a.sousGroupe!==b.sousGroupe) return a.sousGroupe.localeCompare(b.sousGroupe);
@@ -1184,6 +1217,7 @@ function renderRecapTable(containerId) {
     </tr>`;
   }).join('');
 
+  // Totals row
   const totals = Array(NB_VOEUX).fill(0);
   rows.forEach(r => r.counts.forEach((n,i)=>{ totals[i]+=n; }));
   const totalCells = totals.map(n=>`<td class="num">${n}</td>`).join('');
@@ -1213,6 +1247,7 @@ function exportRecapCSV() {
 }
 
 /* ══ Panneau latéral postes disponibles ══ */
+// Couleurs par univers
 const UNIVERS_COLORS = {
   'AC':  '#1A6B4A',
   'ATE': '#1A5FA0',
@@ -1229,8 +1264,9 @@ function renderSidebar(rank) {
   if (!body) return;
   if (!rank || !posts.length) { body.innerHTML = '<div class="empty" style="padding:1.5rem;font-size:12px;">Sélectionnez votre nom pour voir les postes disponibles.</div>'; return; }
 
-  const tree = {};
-  const seenNames = {};
+  // Grouper les postes par univers > sous-groupe
+  const tree = {}; // { univers: { sousGroupe: { total, remaining } } }
+  const seenNames = {}; // name -> already counted once per univers/sg
 
   posts.forEach(p => {
     const u  = p.univers    || 'Autre';
@@ -1238,6 +1274,7 @@ function renderSidebar(rank) {
     if (!tree[u]) tree[u] = {};
     if (!tree[u][sg]) tree[u][sg] = { total: 0, remaining: 0 };
 
+    // Count unique names per sg for total
     const key = u + '||' + sg + '||' + p.name;
     if (!seenNames[key]) {
       seenNames[key] = true;
@@ -1248,6 +1285,7 @@ function renderSidebar(rank) {
     }
   });
 
+  // Compute max remaining in each univers for bar scaling
   let html = '';
   const universOrder = Object.keys(tree).sort();
 
@@ -1271,6 +1309,7 @@ function renderSidebar(rank) {
 
     Object.keys(sgs).sort().forEach(sg => {
       const { remaining, total } = sgs[sg];
+      // Jauge proportionnelle au total du sous-groupe (pas au max inter-sg)
       const pct = total > 0 ? Math.round((remaining / total) * 100) : 0;
       const zero = remaining === 0;
       html += `<div class="sg-row${zero?' sg-zero':''}">
