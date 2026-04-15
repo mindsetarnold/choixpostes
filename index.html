@@ -717,9 +717,10 @@ function fillAllSelects(rank, toRestore) {
   };
 
   // ── V1 : postes groupés par nom, avec décompte restant, exclus si reste=0 ──
+  // V1 peut contenir tous les postes disponibles, y compris ceux déjà en V2-V5
+  // (l'exclusion inter-vœux s'applique seulement dans l'autre sens : V2-V5 excluent V1)
   const sel1 = document.getElementById('post-select-1');
   const prevV1 = toRestore?.v1 || '';
-  const otherSelected1 = getSelected(1);
   sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
   const seenNamesV1 = new Set();
   posts.forEach(p => {
@@ -728,12 +729,12 @@ function fillAllSelects(rank, toRestore) {
     const total = totalByName(p.name);
     const remaining = remainingV1(p.name, rank);
     if (remaining === 0) return; // plus de place → ne pas afficher
-    // ID représentatif : premier exemplaire non dans autres vœux
-    const repId = posts.find(gp => gp.name === p.name && !otherSelected1.has(gp.id))?.id;
+    // ID représentatif : premier exemplaire disponible (sans exclusion inter-vœux pour V1)
+    const repId = posts.find(gp => gp.name === p.name)?.id;
     if (!repId) return;
     const o = document.createElement('option');
     o.value = repId;
-    let label = p.name + (p.ministry?` (${p.ministry})`:'');
+    let label = p.name;
     if (total > 1) label += ` — reste ${remaining} poste${remaining>1?'s':''}`;
     o.textContent = label;
     sel1.appendChild(o);
@@ -745,6 +746,19 @@ function fillAllSelects(rank, toRestore) {
       if (opt.value === prevV1 || (opt.value && postName(opt.value) === prevName)) {
         sel1.value = opt.value; break;
       }
+    }
+  }
+  // Si V1 est maintenant un poste qui était dans V2-V5, réinitialiser ce slot
+  const v1Name = postName(sel1.value);
+  if (v1Name) {
+    for (let i = 2; i <= NB_VOEUX; i++) {
+      const si = document.getElementById('post-select-'+i);
+      if (si && postName(si.value) === v1Name) si.value = '';
+    }
+    // Mettre à jour toRestore pour refléter la réinitialisation
+    for (let i = 2; i <= NB_VOEUX; i++) {
+      const si = document.getElementById('post-select-'+i);
+      if (si) toRestore['v'+i] = si.value;
     }
   }
 
@@ -784,6 +798,13 @@ function onVoeuChange() {
   if (!currentStudentRank) return;
   const current = {};
   for (let i = 1; i <= NB_VOEUX; i++) current['v'+i] = document.getElementById('post-select-'+i)?.value || '';
+  // Si V1 vient de changer, réinitialiser les vœux suivants qui ont le même nom
+  const v1Name = postName(current.v1);
+  if (v1Name) {
+    for (let i = 2; i <= NB_VOEUX; i++) {
+      if (current['v'+i] && postName(current['v'+i]) === v1Name) current['v'+i] = '';
+    }
+  }
   fillAllSelects(currentStudentRank, current);
   const myChoice = choices.find(c => c.rank === currentStudentRank);
   updateV1Alert(currentStudentRank, myChoice);
@@ -1126,6 +1147,7 @@ function renderSidebar(rank) {
   universOrder.forEach(u => {
     const sgs = tree[u];
     const totalRemaining = Object.values(sgs).reduce((s, v) => s + v.remaining, 0);
+    const totalAll       = Object.values(sgs).reduce((s, v) => s + v.total,     0);
     const color  = UNIVERS_COLORS[u]  || '#5F5E5A';
     const bgColor= UNIVERS_BG[u]      || '#EDEAE3';
     const isOpen = sessionStorage.getItem('panel_open_'+u) !== 'false';
@@ -1134,7 +1156,7 @@ function renderSidebar(rank) {
       <button class="univers-header" onclick="toggleUnivers('${esc(u)}')">
         <span class="univers-name" style="color:${color};">${esc(u)}</span>
         <span style="display:flex;align-items:center;gap:6px;">
-          <span class="univers-total" style="background:${bgColor};color:${color};">${totalRemaining} dispo</span>
+          <span class="univers-total" style="background:${bgColor};color:${color};">dispos : ${totalRemaining}/${totalAll}</span>
           <span class="univers-chevron${isOpen?' open':''}" id="chev-${esc(u)}">▼</span>
         </span>
       </button>
