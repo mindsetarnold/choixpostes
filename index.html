@@ -121,6 +121,22 @@
   .save-btn { background: var(--green-bg); border: 1px solid var(--green); color: var(--green); border-radius: var(--radius); padding: 0 10px; height: 30px; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; }
   .save-btn:hover { background: var(--green); color: #fff; }
 
+
+  /* ── Onglets interface élève ── */
+  .student-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+  .student-tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 9px 18px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); font-family: 'DM Sans', sans-serif; transition: color .15s, border-color .15s; margin-bottom: -1px; }
+  .student-tab:hover { color: var(--text); }
+  .student-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ── Tableau récapitulatif ── */
+  .recap-table table { font-size: 12px; }
+  .recap-table th { font-size: 10px; }
+  .recap-table td.num { font-family: 'DM Mono', monospace; text-align: center; font-size: 12px; }
+  .recap-table td.num-zero { color: var(--text3); }
+  .recap-table tr.total-row td { font-weight: 600; background: var(--bg); border-top: 2px solid var(--border2); }
+  .recap-table .zebra tr:nth-child(even) td { background: rgba(60,50,30,0.03); }
+  .recap-table .zebra tr:nth-child(even):hover td { background: var(--green-lt); }
+  .recap-table .zebra tr.total-row td { background: var(--bg) !important; }
   /* ── Layout latéral élève ── */
   .student-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start; }
   @media (max-width: 700px) { .student-layout { grid-template-columns: 1fr; } #panel-sidebar { order: -1; } }
@@ -248,6 +264,7 @@
       <button class="tab active" onclick="switchAdminTab('tab-students',this)">Élèves</button>
       <button class="tab" onclick="switchAdminTab('tab-posts',this)">Postes</button>
       <button class="tab" onclick="switchAdminTab('tab-choices',this)">Suivi des vœux</button>
+      <button class="tab" onclick="switchAdminTab('tab-recap',this)">Récapitulatif</button>
       <button class="tab" onclick="switchAdminTab('tab-settings',this)">Paramètres</button>
     </div>
 
@@ -379,39 +396,59 @@
         <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
       </div>
 
-      <div class="student-layout">
-        <!-- Colonne principale -->
-        <div>
-          <div class="card" style="margin-bottom:1rem;">
-            <div class="card-title" id="voeux-card-title">Mes vœux</div>
-            <div class="alert-box alert-red" id="alert-v1-evicted" style="display:none;"></div>
-            <div id="voeux-selects" style="margin-bottom:14px;"></div>
-            <div class="flex-gap">
-              <button class="btn btn-green" onclick="submitChoice()">Enregistrer mes vœux</button>
-              <span class="status" id="student-status"></span>
-            </div>
-          </div>
+      <!-- Onglets élève -->
+      <div class="student-tabs">
+        <button class="student-tab active" onclick="switchStudentTab('st-tab-saisie', this)">Saisie des vœux</button>
+        <button class="student-tab" onclick="switchStudentTab('st-tab-recap', this)">Récapitulatif</button>
+      </div>
 
-          <div class="table-wrap">
-            <div class="table-head">
-              <span class="table-head-title">Vœux de la promotion</span>
+      <!-- Onglet : Saisie des vœux -->
+      <div id="st-tab-saisie">
+        <div class="student-layout">
+          <!-- Colonne principale -->
+          <div>
+            <div class="card" style="margin-bottom:1rem;">
+              <div class="card-title" id="voeux-card-title">Mes vœux</div>
+              <div class="alert-box alert-red" id="alert-v1-evicted" style="display:none;"></div>
+              <div id="voeux-selects" style="margin-bottom:14px;"></div>
               <div class="flex-gap">
-                <input type="text" id="st-search" placeholder="Nom ou rang (ex: 14)…" style="width:200px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
+                <button class="btn btn-green" onclick="submitChoice()">Enregistrer mes vœux</button>
+                <span class="status" id="student-status"></span>
               </div>
             </div>
-            <div id="student-choices-table"><div class="empty">Aucun vœu enregistré pour l'instant.</div></div>
+
+            <div class="table-wrap">
+              <div class="table-head">
+                <span class="table-head-title">Vœux de la promotion</span>
+                <div class="flex-gap">
+                  <input type="text" id="st-search" placeholder="Nom, rang ou poste…" style="width:210px;height:30px;font-size:12px;" oninput="renderStudentTable()" />
+                </div>
+              </div>
+              <div id="student-choices-table"><div class="empty">Aucun vœu enregistré pour l'instant.</div></div>
+            </div>
+          </div>
+
+          <!-- Panneau latéral postes disponibles -->
+          <div id="panel-sidebar">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">Postes disponibles (V1)</div>
+                <div class="panel-subtitle">Selon votre rang — cliquez pour réduire/ouvrir</div>
+              </div>
+              <div id="panel-body"><div class="empty" style="padding:1.5rem;font-size:12px;">Chargement…</div></div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- Panneau latéral postes disponibles -->
-        <div id="panel-sidebar">
-          <div class="panel">
-            <div class="panel-header">
-              <div class="panel-title">Postes disponibles (V1)</div>
-              <div class="panel-subtitle">Selon votre rang — cliquez pour réduire/ouvrir</div>
-            </div>
-            <div id="panel-body"><div class="empty" style="padding:1.5rem;font-size:12px;">Chargement…</div></div>
+      <!-- Onglet : Récapitulatif -->
+      <div id="st-tab-recap" style="display:none;">
+        <div class="table-wrap recap-table">
+          <div class="table-head">
+            <span class="table-head-title">Récapitulatif des vœux par poste</span>
+            <input type="text" id="recap-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderRecapTable('student-recap-body')" />
           </div>
+          <div id="student-recap-body"><div class="empty">Chargement…</div></div>
         </div>
       </div>
     </div>
@@ -490,6 +527,7 @@ function switchAdminTab(tabId, btn) {
   document.getElementById(tabId).style.display = 'block';
   btn.classList.add('active');
   if (tabId === 'tab-choices') renderChoicesTable();
+  if (tabId === 'tab-recap')   renderRecapTable('admin-recap-body');
 }
 
 /* ══ Auth admin ══ */
@@ -775,11 +813,9 @@ function fillAllSelects(rank, toRestore) {
       // Exclure si le même nom est déjà dans un autre vœu de cet élève
       const repId = posts.find(gp => gp.name === p.name && !otherSel.has(gp.id))?.id;
       if (!repId) return;
-      const count = v2v5ChosenCount(p.name);
       const o = document.createElement('option');
       o.value = repId;
-      let label = p.name + (p.ministry?` (${p.ministry})`:'');
-      if (count > 0) label += ` — choisi par ${count} élève${count>1?'s':''}`;
+      const label = p.name;
       o.textContent = label;
       sel.appendChild(o);
     });
@@ -859,9 +895,14 @@ function renderStudentTable() {
   const q = (document.getElementById('st-search').value||'').toLowerCase();
   const filtered = choices.filter(c => {
     if (!q) return true;
-    const p1=posts.find(p=>p.id===c.v1);
     const rankMatch = String(c.rank) === q.trim();
-    return rankMatch || c.name.toLowerCase().includes(q)||(p1&&p1.name.toLowerCase().includes(q));
+    if (rankMatch || c.name.toLowerCase().includes(q)) return true;
+    // Search across all voeux post names
+    for (let i = 1; i <= NB_VOEUX; i++) {
+      const pid = c['v'+i];
+      if (pid && postName(pid).toLowerCase().includes(q)) return true;
+    }
+    return false;
   });
   const el = document.getElementById('student-choices-table');
   if (!filtered.length) { el.innerHTML='<div class="empty">Aucun vœu enregistré pour l\'instant.</div>'; return; }
@@ -1100,6 +1141,110 @@ function applyLogo(dataUrl) {
   }
 }
 
+
+
+/* ══ Onglets interface élève ══ */
+function switchStudentTab(tabId, btn) {
+  ['st-tab-saisie','st-tab-recap'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  document.querySelectorAll('.student-tab').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.style.display = '';
+  btn.classList.add('active');
+  if (tabId === 'st-tab-recap') renderRecapTable('student-recap-body');
+}
+
+/* ══ Tableau récapitulatif ══ */
+function buildRecapData(q) {
+  // One row per unique post name, grouped
+  const seen = new Set();
+  const rows = [];
+  posts.forEach(p => {
+    if (seen.has(p.name)) return;
+    seen.add(p.name);
+    // Count choices per voeu level
+    const counts = Array(NB_VOEUX).fill(0);
+    choices.forEach(c => {
+      for (let i = 1; i <= NB_VOEUX; i++) {
+        if (c['v'+i] && postName(c['v'+i]) === p.name) counts[i-1]++;
+      }
+    });
+    const total = counts.reduce((s,n)=>s+n,0);
+    rows.push({ univers: p.univers||'', sousGroupe: p.sousGroupe||'', name: p.name, counts, total });
+  });
+  // Filter
+  if (q) {
+    const qq = q.toLowerCase();
+    return rows.filter(r =>
+      r.name.toLowerCase().includes(qq) ||
+      r.univers.toLowerCase().includes(qq) ||
+      r.sousGroupe.toLowerCase().includes(qq)
+    );
+  }
+  return rows;
+}
+
+function renderRecapTable(containerId) {
+  const isAdmin = containerId === 'admin-recap-body';
+  const searchId = isAdmin ? 'adm-recap-search' : 'recap-search';
+  const q = (document.getElementById(searchId)?.value||'').toLowerCase();
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!posts.length) { el.innerHTML='<div class="empty">Aucun poste enregistré.</div>'; return; }
+
+  const rows = buildRecapData(q);
+  if (!rows.length) { el.innerHTML='<div class="empty">Aucun résultat.</div>'; return; }
+
+  // Sort: univers → sousGroupe → name
+  rows.sort((a,b)=>{
+    if (a.univers!==b.univers) return a.univers.localeCompare(b.univers);
+    if (a.sousGroupe!==b.sousGroupe) return a.sousGroupe.localeCompare(b.sousGroupe);
+    return a.name.localeCompare(b.name);
+  });
+
+  const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th style="text-align:center;">V${i+1}</th>`).join('');
+  const dataRows = rows.map(r => {
+    const cells = r.counts.map(n =>
+      `<td class="num${n===0?' num-zero':''}">${n>0?n:'—'}</td>`
+    ).join('');
+    return `<tr>
+      <td style="font-size:11px;color:var(--text2);">${esc(r.univers)}</td>
+      <td style="font-size:11px;color:var(--text2);">${esc(r.sousGroupe)}</td>
+      <td>${esc(r.name)}</td>
+      ${cells}
+    </tr>`;
+  }).join('');
+
+  // Totals row
+  const totals = Array(NB_VOEUX).fill(0);
+  rows.forEach(r => r.counts.forEach((n,i)=>{ totals[i]+=n; }));
+  const totalCells = totals.map(n=>`<td class="num">${n}</td>`).join('');
+  const totalRow = `<tr class="total-row">
+    <td colspan="3" style="font-size:12px;">Total</td>
+    ${totalCells}
+  </tr>`;
+
+  el.innerHTML = `<div style="overflow-x:auto;"><table class="zebra"><thead><tr>
+    <th>Univers</th><th>Sous-groupe</th><th>Poste</th>${vHeaders}
+  </tr></thead><tbody>${dataRows}${totalRow}</tbody></table></div>`;
+}
+
+function exportRecapCSV() {
+  const rows = buildRecapData('');
+  rows.sort((a,b)=>{
+    if (a.univers!==b.univers) return a.univers.localeCompare(b.univers);
+    if (a.sousGroupe!==b.sousGroupe) return a.sousGroupe.localeCompare(b.sousGroupe);
+    return a.name.localeCompare(b.name);
+  });
+  const headers = ['Univers','Sous-groupe','Poste',...[...Array(NB_VOEUX)].map((_,i)=>`Vœu ${i+1}`)];
+  const csvRows = [headers, ...rows.map(r=>[r.univers,r.sousGroupe,r.name,...r.counts])];
+  const csv = csvRows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
+  a.download = 'recap-voeux-IRA.csv'; a.click();
+}
 
 /* ══ Panneau latéral postes disponibles ══ */
 // Couleurs par univers
