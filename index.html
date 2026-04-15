@@ -605,7 +605,7 @@ function loginAsStudent(rank) {
   document.getElementById('student-pin-err').textContent = '';
   showScreen('screen-student');
   refreshAll();
-  buildVoeuxForm(rank);
+  buildVoeuxForm(rank, true);
   renderSidebar(rank);
 }
 
@@ -741,19 +741,11 @@ function buildVoeuxForm(rank, resetSelects) {
   const toRestore = {};
   for (let i = 1; i <= NB_VOEUX; i++) toRestore['v'+i] = resetSelects ? (myChoice?.['v'+i]||'') : current['v'+i];
 
-  for (let i = 1; i <= NB_VOEUX; i++) {
-  const sel = document.getElementById('post-select-'+i);
-  if (sel) sel.innerHTML = '';
-}
-fillAllSelects(rank, toRestore);
+  fillAllSelects(rank, toRestore);
   updateV1Alert(rank, myChoice);
 }
 
-function for (let i = 1; i <= NB_VOEUX; i++) {
-  const sel = document.getElementById('post-select-'+i);
-  if (sel) sel.innerHTML = '';
-}
-fillAllSelects(rank, toRestore) {
+function fillAllSelects(rank, toRestore) {
   const getSelected = (excludeNum) => {
     const s = new Set();
     for (let i = 1; i <= NB_VOEUX; i++) {
@@ -840,11 +832,7 @@ function onVoeuChange() {
       if (current['v'+i] && postName(current['v'+i]) === v1Name) current['v'+i] = '';
     }
   }
-  for (let i = 1; i <= NB_VOEUX; i++) {
-  const sel = document.getElementById('post-select-'+i);
-  if (sel) sel.innerHTML = '';
-}
-fillAllSelects(currentStudentRank, current);
+  fillAllSelects(currentStudentRank, current);
   const myChoice = choices.find(c => c.rank === currentStudentRank);
   updateV1Alert(currentStudentRank, myChoice);
 }
