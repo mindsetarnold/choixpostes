@@ -33,7 +33,15 @@
   html { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
   body { min-height: 100vh; }
   .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* ── Logo placements ── */
+  /* In logo-bar: logo replaces/sits beside the IRA text */
   .logo-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
+  #logo-in-bar { max-height: 40px; max-width: 160px; object-fit: contain; display: none; }
+  /* In lock screen: replaces the icon */
+  #logo-in-lock { max-height: 72px; max-width: 220px; object-fit: contain; display: none; margin: 0 auto 1rem; }
+  .lock-icon-wrap { margin-bottom: 1rem; }
+
   .logo { font-size: 13px; font-weight: 500; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
   .logo span { color: var(--green); }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
@@ -77,8 +85,6 @@
   tr:hover td { background: var(--green-lt); }
   .zebra tr:nth-child(even) td { background: rgba(60,50,30,0.03); }
   .zebra tr:nth-child(even):hover td { background: var(--green-lt); }
-  .site-logo-bar { display:flex; align-items:center; justify-content:center; padding:0.8rem 0; margin-bottom:0.5rem; border-bottom:1px solid var(--border); }
-  .site-logo-bar img { max-height:60px; max-width:240px; object-fit:contain; }
   .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 99px; font-family: 'DM Mono', monospace; }
   .badge-green { background: var(--green-bg); color: var(--green); }
   .badge-gray  { background: var(--surface2); color: var(--text2); }
@@ -140,7 +146,7 @@
   .sg-row { padding: 4px 14px; }
   .sg-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
   .sg-name { font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
-  .sg-count { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 600; color: var(--text); white-space: nowrap; margin-left: 6px; }
+  .sg-count { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 600; color: var(--text); white-space: nowrap; margin-left: 6px; letter-spacing: -0.02em; }
   .sg-bar-bg { height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
   .sg-bar-fill { height: 100%; border-radius: 99px; transition: width .4s ease; }
   .sg-zero .sg-name { color: var(--text3); text-decoration: line-through; }
@@ -169,9 +175,9 @@
 </script>
 
 <div class="page">
-  <div id="site-logo-bar" class="site-logo-bar" style="display:none;"><img id="site-logo-img" src="" alt="Logo" /></div>
   <div class="logo-bar">
     <div class="logo">IRA — <span>Choix de postes</span></div>
+    <img id="logo-in-bar" src="" alt="Logo" />
     <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;">
       <span class="loader" id="sync-loader" style="display:none;"></span>
       <span id="sync-label">—</span>
@@ -182,7 +188,10 @@
   <div id="screen-lock" class="screen active">
     <div class="lock-wrap">
       <div class="lock-box">
-        <div class="lock-icon">🎓</div>
+        <div class="lock-icon-wrap">
+          <img id="logo-in-lock" src="" alt="Logo" />
+          <div class="lock-icon" id="lock-emoji">🎓</div>
+        </div>
         <h2>Promotion IRA</h2>
         <p class="sub">Choisissez votre mode d'accès</p>
         <button class="btn btn-blue btn-lg" onclick="showScreen('screen-pin')" style="width:100%;justify-content:center;margin-bottom:6px;">Accès élève</button>
@@ -1045,16 +1054,28 @@ async function removeLogo() {
   setStatus('logo-status', 'Logo supprimé.', 'ok');
 }
 function applyLogo(dataUrl) {
-  const bar = document.getElementById('site-logo-bar');
-  const img = document.getElementById('site-logo-img');
-  const prev = document.getElementById('logo-preview');
-  const prevImg = document.getElementById('logo-preview-img');
+  // 1. Logo in top bar (admin/student screens)
+  const logoBar  = document.getElementById('logo-in-bar');
+  // 2. Logo on lock screen (replaces emoji)
+  const logoLock = document.getElementById('logo-in-lock');
+  const lockEmoji= document.getElementById('lock-emoji');
+  // 3. Admin preview
+  const prev     = document.getElementById('logo-preview');
+  const prevImg  = document.getElementById('logo-preview-img');
+
   if (dataUrl) {
-    img.src = dataUrl; bar.style.display = '';
-    prevImg.src = dataUrl; prev.style.display = '';
+    // Top bar
+    if (logoBar)  { logoBar.src = dataUrl;  logoBar.style.display = 'block'; }
+    // Lock screen : show logo, hide emoji
+    if (logoLock) { logoLock.src = dataUrl; logoLock.style.display = 'block'; }
+    if (lockEmoji){ lockEmoji.style.display = 'none'; }
+    // Admin preview
+    if (prevImg)  { prevImg.src = dataUrl;  prev.style.display = ''; }
   } else {
-    img.src = ''; bar.style.display = 'none';
-    prevImg.src = ''; prev.style.display = 'none';
+    if (logoBar)  { logoBar.src = '';  logoBar.style.display = 'none'; }
+    if (logoLock) { logoLock.src = ''; logoLock.style.display = 'none'; }
+    if (lockEmoji){ lockEmoji.style.display = ''; }
+    if (prevImg)  { prevImg.src = '';  prev.style.display = 'none'; }
   }
 }
 
@@ -1107,7 +1128,6 @@ function renderSidebar(rank) {
     const totalRemaining = Object.values(sgs).reduce((s, v) => s + v.remaining, 0);
     const color  = UNIVERS_COLORS[u]  || '#5F5E5A';
     const bgColor= UNIVERS_BG[u]      || '#EDEAE3';
-    const maxRem = Math.max(...Object.values(sgs).map(v=>v.remaining), 1);
     const isOpen = sessionStorage.getItem('panel_open_'+u) !== 'false';
 
     html += `<div class="univers-block">
@@ -1121,13 +1141,14 @@ function renderSidebar(rank) {
       <div class="univers-body" id="ubody-${esc(u)}" style="display:${isOpen?'block':'none'};">`;
 
     Object.keys(sgs).sort().forEach(sg => {
-      const { remaining } = sgs[sg];
-      const pct = Math.round((remaining / maxRem) * 100);
+      const { remaining, total } = sgs[sg];
+      // Jauge proportionnelle au total du sous-groupe (pas au max inter-sg)
+      const pct = total > 0 ? Math.round((remaining / total) * 100) : 0;
       const zero = remaining === 0;
       html += `<div class="sg-row${zero?' sg-zero':''}">
         <div class="sg-label">
           <span class="sg-name" title="${esc(sg)}">${esc(sg)}</span>
-          <span class="sg-count">${remaining}</span>
+          <span class="sg-count">${remaining}/${total}</span>
         </div>
         <div class="sg-bar-bg">
           <div class="sg-bar-fill" style="width:${pct}%;background:${zero?'var(--surface2)':color};"></div>
