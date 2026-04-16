@@ -33,15 +33,10 @@
   html { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
   body { min-height: 100vh; }
   .page { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
-
-  /* ── Logo placements ── */
-  /* In logo-bar: logo replaces/sits beside the IRA text */
   .logo-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; }
   #logo-in-bar { max-height: 40px; max-width: 160px; object-fit: contain; display: none; }
-  /* In lock screen: replaces the icon */
   #logo-in-lock { max-height: 72px; max-width: 220px; object-fit: contain; display: none; margin: 0 auto 1rem; }
   .lock-icon-wrap { margin-bottom: 1rem; }
-
   .logo { font-size: 13px; font-weight: 500; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
   .logo span { color: var(--green); }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
@@ -115,20 +110,14 @@
   code { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; }
   .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  /* Inline rank input */
   .rank-input { width: 60px; padding: 4px 8px; font-size: 13px; height: 30px; font-family: 'DM Mono', monospace; text-align: center; }
   .pin-set-input { width: 80px; padding: 4px 8px; font-size: 13px; height: 30px; font-family: 'DM Mono', monospace; text-align: center; letter-spacing: 3px; }
   .save-btn { background: var(--green-bg); border: 1px solid var(--green); color: var(--green); border-radius: var(--radius); padding: 0 10px; height: 30px; cursor: pointer; font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 500; }
   .save-btn:hover { background: var(--green); color: #fff; }
-
-
-  /* ── Onglets interface élève ── */
   .student-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
   .student-tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 9px 18px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); font-family: 'DM Sans', sans-serif; transition: color .15s, border-color .15s; margin-bottom: -1px; }
   .student-tab:hover { color: var(--text); }
   .student-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-
-  /* ── Tableau récapitulatif ── */
   .recap-table table { font-size: 12px; }
   .recap-table th { font-size: 10px; }
   .recap-table td.num { font-family: 'DM Mono', monospace; text-align: center; font-size: 12px; }
@@ -137,17 +126,12 @@
   .recap-table .zebra tr:nth-child(even) td { background: rgba(60,50,30,0.03); }
   .recap-table .zebra tr:nth-child(even):hover td { background: var(--green-lt); }
   .recap-table .zebra tr.total-row td { background: var(--bg) !important; }
-  /* ── Layout latéral élève ── */
   .student-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start; }
   @media (max-width: 700px) { .student-layout { grid-template-columns: 1fr; } #panel-sidebar { order: -1; } }
-
-  /* ── Panneau latéral ── */
   .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; position: sticky; top: 1rem; }
   .panel-header { padding: 12px 14px; border-bottom: 1px solid var(--border); background: var(--bg); }
   .panel-title { font-size: 13px; font-weight: 600; color: var(--text); }
   .panel-subtitle { font-size: 11px; color: var(--text3); margin-top: 1px; }
-
-  /* Univers accordion */
   .univers-block { border-bottom: 1px solid var(--border); }
   .univers-block:last-child { border-bottom: none; }
   .univers-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; cursor: pointer; user-select: none; background: none; border: none; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
@@ -157,8 +141,6 @@
   .univers-chevron { font-size: 10px; color: var(--text3); transition: transform .2s; }
   .univers-chevron.open { transform: rotate(180deg); }
   .univers-body { padding: 4px 0 8px; }
-
-  /* Sous-groupe bars */
   .sg-row { padding: 4px 14px; }
   .sg-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
   .sg-name { font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
@@ -168,10 +150,7 @@
   .sg-zero .sg-name { color: var(--text3); text-decoration: line-through; }
   .sg-zero .sg-count { color: var(--text3); }
   .sg-zero .sg-bar-fill { background: var(--surface2); }
-  @media (max-width: 560px) {
-    .stats { grid-template-columns: 1fr 1fr; }
-    .page { padding: 1.5rem 1rem 3rem; }
-  }
+  @media (max-width: 560px) { .stats { grid-template-columns: 1fr 1fr; } .page { padding: 1.5rem 1rem 3rem; } }
 </style>
 </head>
 <body>
@@ -330,6 +309,20 @@
       </div>
     </div>
 
+    <!-- ══ Tab Récapitulatif (admin) ══ -->
+    <div id="tab-recap" class="admin-tab">
+      <div class="table-wrap recap-table">
+        <div class="table-head">
+          <span class="table-head-title">Récapitulatif des vœux par poste</span>
+          <div class="flex-gap">
+            <input type="text" id="adm-recap-search" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderRecapTable('admin-recap-body')" />
+            <button class="btn btn-sm" onclick="exportRecapCSV()">Exporter CSV</button>
+          </div>
+        </div>
+        <div id="admin-recap-body"><div class="empty">Chargement…</div></div>
+      </div>
+    </div>
+
     <!-- Tab Paramètres -->
     <div id="tab-settings" class="admin-tab">
       <div class="card">
@@ -378,34 +371,27 @@
       <button class="btn btn-sm" onclick="showScreen('screen-lock')">← Retour</button>
     </div>
     <p style="font-size:13px;color:var(--text2);margin-bottom:1.5rem;">Promotion 50 — Formulez jusqu'à 5 vœux par ordre de préférence.</p>
-
     <div id="student-locked" style="display:none;">
       <div class="lock-wrap" style="min-height:40vh;">
         <div class="lock-box">
           <div class="lock-icon">⏳</div>
           <h2>Pas encore ouvert</h2>
           <p class="sub">L'accès n'est pas encore activé. Revenez dans quelques instants.</p>
-          <button class="btn btn-sm" style="margin-top:8px;" onclick="refreshAll()">Actualiser</button>
+          <button class="btn btn-sm" style="margin-top:8px;" onclick="refreshDisplayOnly()">Actualiser</button>
         </div>
       </div>
     </div>
-
     <div id="student-ui">
       <div class="stats">
         <div class="stat"><div class="stat-label">Élèves ayant saisi leurs vœux</div><div class="stat-value" id="st-voted">—</div></div>
         <div class="stat"><div class="stat-label">Màj</div><div class="stat-value" style="font-size:14px;padding-top:8px;" id="st-update">—</div></div>
       </div>
-
-      <!-- Onglets élève -->
       <div class="student-tabs">
         <button class="student-tab active" onclick="switchStudentTab('st-tab-saisie', this)">Saisie des vœux</button>
         <button class="student-tab" onclick="switchStudentTab('st-tab-recap', this)">Récapitulatif</button>
       </div>
-
-      <!-- Onglet : Saisie des vœux -->
       <div id="st-tab-saisie">
         <div class="student-layout">
-          <!-- Colonne principale -->
           <div>
             <div class="card" style="margin-bottom:1rem;">
               <div class="card-title" id="voeux-card-title">Mes vœux</div>
@@ -416,7 +402,6 @@
                 <span class="status" id="student-status"></span>
               </div>
             </div>
-
             <div class="table-wrap">
               <div class="table-head">
                 <span class="table-head-title">Vœux de la promotion</span>
@@ -427,8 +412,6 @@
               <div id="student-choices-table"><div class="empty">Aucun vœu enregistré pour l'instant.</div></div>
             </div>
           </div>
-
-          <!-- Panneau latéral postes disponibles -->
           <div id="panel-sidebar">
             <div class="panel">
               <div class="panel-header">
@@ -440,8 +423,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Onglet : Récapitulatif -->
       <div id="st-tab-recap" style="display:none;">
         <div class="table-wrap recap-table">
           <div class="table-head">
@@ -468,15 +449,6 @@ let choices    = [];
 let accessOpen = false;
 let db         = null;
 let currentStudentRank = null;
-
-// pendingVoeux = source de vérité locale pour les menus déroulants.
-// Stocké sous forme de NOM de poste (pas d'ID) pour être stable même si
-// les IDs représentatifs changent suite aux actions d'autres élèves.
-// Structure : { v1: "Nom du poste", v2: "...", ... }
-// JAMAIS mis à jour par Firebase. Mis à jour uniquement par :
-//   - loginAsStudent (chargement initial depuis Firebase)
-//   - onVoeuChange (action directe de l'élève)
-//   - submitChoice (après validation réussie)
 let pendingVoeux = {};
 
 // ════════════════════════════════════════════════════════
@@ -491,12 +463,10 @@ function initFirebase() {
     setupListeners();
   } catch(e) { setSyncLabel('Erreur Firebase', false); }
 }
-
 function setSyncLabel(t, loading) {
   document.getElementById('sync-label').textContent = t;
   document.getElementById('sync-loader').style.display = loading ? '' : 'none';
 }
-
 function setupListeners() {
   ['students','posts','choices','settings'].forEach(path => {
     db.ref('ira/'+path).on('value', snap => {
@@ -510,8 +480,6 @@ function setupListeners() {
         if (tog) tog.checked = accessOpen;
         applyLogo(v?.logo || null);
       }
-      // IMPORTANT : on ne touche PAS aux menus déroulants ici.
-      // On met à jour uniquement les affichages qui ne dépendent pas de pendingVoeux.
       refreshDisplayOnly();
       setSyncLabel('Synchronisé · ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}), false);
     });
@@ -544,7 +512,6 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   if (id === 'screen-pin') populatePinStudentSelect();
 }
-
 function switchAdminTab(tabId, btn) {
   document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -553,7 +520,6 @@ function switchAdminTab(tabId, btn) {
   if (tabId === 'tab-choices') renderChoicesTable();
   if (tabId === 'tab-recap')   renderRecapTable('admin-recap-body');
 }
-
 function switchStudentTab(tabId, btn) {
   ['st-tab-saisie','st-tab-recap'].forEach(id => {
     const el = document.getElementById(id);
@@ -583,7 +549,6 @@ async function tryAdmin() {
     document.getElementById('pin-err').textContent = 'Code incorrect.';
   }
 }
-
 function populatePinStudentSelect() {
   const sel = document.getElementById('pin-student-select');
   sel.innerHTML = '<option value="">— Choisir mon nom —</option>';
@@ -596,7 +561,6 @@ function populatePinStudentSelect() {
   document.getElementById('student-pin-err').textContent = '';
   document.getElementById('pin-enter-btn').disabled = true;
 }
-
 function onPinStudentChange() {
   const rank = parseInt(document.getElementById('pin-student-select').value);
   document.getElementById('pin-field').style.display = rank ? '' : 'none';
@@ -604,7 +568,6 @@ function onPinStudentChange() {
   document.getElementById('student-pin-input').value = '';
   document.getElementById('student-pin-err').textContent = '';
 }
-
 function tryStudentPin() {
   const rank = parseInt(document.getElementById('pin-student-select').value);
   const entered = document.getElementById('student-pin-input').value;
@@ -618,59 +581,44 @@ function tryStudentPin() {
     document.getElementById('student-pin-err').textContent = 'Code PIN incorrect.';
   }
 }
-
 function loginAsStudent(rank) {
   currentStudentRank = rank;
   document.getElementById('student-pin-err').textContent = '';
-
-  // Charger les vœux sauvegardés en Firebase → convertir IDs en noms
   const saved = choices.find(c => c.rank === rank);
   pendingVoeux = {};
   for (let i = 1; i <= NB_VOEUX; i++) {
     pendingVoeux['v'+i] = saved ? (postName(saved['v'+i]) || '') : '';
   }
-
   showScreen('screen-student');
   refreshDisplayOnly();
-  // Construire les menus avec les vœux chargés
   buildVoeuxForm();
 }
 
 // ════════════════════════════════════════════════════════
 //  LOGIQUE MÉTIER
 // ════════════════════════════════════════════════════════
-
-// Nombre de V1 pris en N fois par des élèves de meilleur rang pour un nom de poste
 function v1TakenCountByBetter(postGroupName, rank) {
   return choices.filter(c => c.rank < rank && c.v1 && postName(c.v1) === postGroupName).length;
 }
-
 function totalByName(name) {
   return posts.filter(p => p.name === name).length;
 }
-
 function remainingV1(postGroupName, rank) {
   return Math.max(0, totalByName(postGroupName) - v1TakenCountByBetter(postGroupName, rank));
 }
-
 function isEvictedV1(choice) {
   if (!choice.v1) return false;
-  const name = postName(choice.v1);
-  return remainingV1(name, choice.rank) === 0;
+  return remainingV1(postName(choice.v1), choice.rank) === 0;
 }
-
 function postName(id) {
   return posts.find(p => p.id === id)?.name || '';
 }
-
-// Retrouve un ID représentatif pour un nom de poste (le premier exemplaire)
 function repIdForName(name) {
   return posts.find(p => p.name === name)?.id || '';
 }
 
 // ════════════════════════════════════════════════════════
-//  REFRESH — NE TOUCHE PAS AUX MENUS DÉROULANTS
-//  Appelé par Firebase et par les actions admin.
+//  REFRESH
 // ════════════════════════════════════════════════════════
 function refreshDisplayOnly() {
   renderStudents();
@@ -682,23 +630,17 @@ function refreshDisplayOnly() {
   renderRecapTable('admin-recap-body');
   if (currentStudentRank) {
     renderSidebar(currentStudentRank);
-    // Mettre à jour uniquement les alertes et les décomptes dans V1,
-    // SANS reconstruire les valeurs sélectionnées.
     updateSelectLabelsAndAlerts();
   }
 }
 
 // ════════════════════════════════════════════════════════
-//  CONSTRUCTION DU FORMULAIRE DE VŒUX
-//  Appelé UNIQUEMENT lors de la connexion de l'élève et onVoeuChange.
-//  Source de vérité : pendingVoeux (noms de postes).
+//  FORMULAIRE VŒUX
 // ════════════════════════════════════════════════════════
 function buildVoeuxForm() {
   const rank = currentStudentRank;
   if (!rank) return;
-
   const container = document.getElementById('voeux-selects');
-  // Créer les lignes si absent
   if (!document.getElementById('post-select-1')) {
     let html = '';
     for (let i = 1; i <= NB_VOEUX; i++) {
@@ -712,23 +654,13 @@ function buildVoeuxForm() {
     }
     container.innerHTML = html;
   }
-
   fillAllSelects(rank);
   updateV1Alert(rank);
   const s = students.find(st=>st.rank===rank);
   if (s) document.getElementById('voeux-card-title').textContent = `Mes vœux — ${s.name} (rang ${rank})`;
 }
 
-// Remplit tous les selects à partir de pendingVoeux (noms) + données Firebase (disponibilités)
 function fillAllSelects(rank) {
-  // Noms déjà choisis dans pendingVoeux (pour exclusion inter-vœux)
-  const chosenNames = () => {
-    const s = new Set();
-    for (let i = 1; i <= NB_VOEUX; i++) { if (pendingVoeux['v'+i]) s.add(pendingVoeux['v'+i]); }
-    return s;
-  };
-
-  // ── V1 : postes disponibles (reste > 0), sans exclusion inter-vœux
   const sel1 = document.getElementById('post-select-1');
   sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
   const seenV1 = new Set();
@@ -743,10 +675,7 @@ function fillAllSelects(rank) {
     o.textContent = p.name + (total > 1 ? ` — reste ${remaining} poste${remaining>1?'s':''}` : '');
     sel1.appendChild(o);
   });
-  // Restaurer depuis pendingVoeux (par nom)
   restoreSelectByName(sel1, pendingVoeux.v1 || '');
-
-  // ── V2-V5 : tous les postes, exclusion de ceux dans les autres vœux
   for (let i = 2; i <= NB_VOEUX; i++) {
     const sel = document.getElementById('post-select-'+i);
     const myName = pendingVoeux['v'+i] || '';
@@ -755,7 +684,6 @@ function fillAllSelects(rank) {
     posts.forEach(p => {
       if (seen.has(p.name)) return;
       seen.add(p.name);
-      // Exclure ce qui est dans un autre vœu (sauf le vœu courant lui-même)
       let usedElsewhere = false;
       for (let j = 1; j <= NB_VOEUX; j++) {
         if (j === i) continue;
@@ -771,31 +699,19 @@ function fillAllSelects(rank) {
   }
 }
 
-// Sélectionne l'option correspondant au nom dans un <select>
 function restoreSelectByName(sel, name) {
   if (!name) return;
   for (const opt of sel.options) {
-    if (opt.value && postName(opt.value) === name) {
-      sel.value = opt.value;
-      return;
-    }
+    if (opt.value && postName(opt.value) === name) { sel.value = opt.value; return; }
   }
-  // Si le nom n'est plus disponible (plus de reste), on laisse vide
-  // et on le retire de pendingVoeux pour ne pas induire en erreur
 }
 
-// Met à jour uniquement les labels (décomptes restants) et les alertes
-// SANS changer les valeurs sélectionnées.
 function updateSelectLabelsAndAlerts() {
   const rank = currentStudentRank;
   if (!rank) return;
-
-  // Mettre à jour les labels de V1 (décomptes restants peuvent avoir changé)
   const sel1 = document.getElementById('post-select-1');
   if (sel1) {
-    const currentVal = sel1.value;
-    const currentName = postName(currentVal);
-    // Reconstruire les options de V1 (décomptes)
+    const currentName = postName(sel1.value);
     sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
     const seenV1 = new Set();
     posts.forEach(p => {
@@ -809,37 +725,28 @@ function updateSelectLabelsAndAlerts() {
       o.textContent = p.name + (total > 1 ? ` — reste ${remaining} poste${remaining>1?'s':''}` : '');
       sel1.appendChild(o);
     });
-    // Restaurer la sélection par nom
     if (currentName) {
       restoreSelectByName(sel1, currentName);
-      // Si le poste n'est plus disponible, vider et mettre à jour pendingVoeux
-      if (!sel1.value) {
-        pendingVoeux.v1 = '';
-      }
+      if (!sel1.value) pendingVoeux.v1 = '';
     }
   }
   updateV1Alert(rank);
 }
 
 // ════════════════════════════════════════════════════════
-//  ÉVÉNEMENT : l'élève change un vœu
+//  ÉVÉNEMENT VŒUX
 // ════════════════════════════════════════════════════════
 function onVoeuChange(voeuNum) {
   const rank = currentStudentRank;
   if (!rank) return;
-
   const sel = document.getElementById('post-select-'+voeuNum);
   const newName = postName(sel.value);
   pendingVoeux['v'+voeuNum] = newName;
-
-  // Si V1 change → vider les vœux suivants qui ont le même nom
   if (voeuNum === 1 && newName) {
     for (let i = 2; i <= NB_VOEUX; i++) {
       if (pendingVoeux['v'+i] === newName) pendingVoeux['v'+i] = '';
     }
   }
-
-  // Reconstruire tous les selects (pour mise à jour des exclusions)
   fillAllSelects(rank);
   updateV1Alert(rank);
   renderSidebar(rank);
@@ -848,11 +755,8 @@ function onVoeuChange(voeuNum) {
 function updateV1Alert(rank) {
   const alertV1 = document.getElementById('alert-v1-evicted');
   if (!alertV1) return;
-  const v1Name = pendingVoeux.v1 || '';
   const saved = choices.find(c => c.rank === rank);
   const savedV1Name = saved ? postName(saved.v1) : '';
-
-  // Alerte si le V1 SAUVEGARDÉ (en Firebase) n'est plus disponible
   if (savedV1Name && remainingV1(savedV1Name, rank) === 0) {
     alertV1.style.display = '';
     alertV1.innerHTML = `⚠️ <strong>Votre vœu 1 "${esc(savedV1Name)}" n'est plus disponible</strong> : tous les exemplaires ont été pris en vœu 1 par des élèves mieux classés. Veuillez choisir un nouveau vœu 1.`;
@@ -868,7 +772,6 @@ async function submitChoice() {
   const rank = currentStudentRank;
   const status = document.getElementById('student-status');
   if (!rank) { status.textContent='Erreur : aucun élève connecté.'; status.className='status err'; return; }
-
   const v1Name = pendingVoeux.v1;
   if (!v1Name) { status.textContent='Le vœu 1 est obligatoire.'; status.className='status err'; return; }
   if (remainingV1(v1Name, rank) === 0) {
@@ -877,17 +780,13 @@ async function submitChoice() {
     updateSelectLabelsAndAlerts();
     return;
   }
-
   const student = students.find(s=>s.rank===rank);
   if (!student) return;
-
-  // Convertir les noms en IDs pour la sauvegarde
   const entry = { rank, name: student.name, ts: Date.now() };
   for (let i = 1; i <= NB_VOEUX; i++) {
     const name = pendingVoeux['v'+i] || '';
     entry['v'+i] = name ? (repIdForName(name) || '') : '';
   }
-
   if (db) {
     await db.ref(`ira/choices/${rank}`).set(entry);
   } else {
@@ -1136,7 +1035,7 @@ function renderSidebar(rank) {
       const {remaining,total}=sgs[sg];
       const pct=total>0?Math.round((remaining/total)*100):0;
       const zero=remaining===0;
-      html+=`<div class="sg-row${zero?' sg-zero':''}" >
+      html+=`<div class="sg-row${zero?' sg-zero':''}">
         <div class="sg-label">
           <span class="sg-name" title="${esc(sg)}">${esc(sg)}</span>
           <span class="sg-count">${remaining}/${total}</span>
