@@ -192,7 +192,10 @@
 
 <div class="page">
   <div class="logo-bar">
-    <div class="logo">IRA — <span>Choix de postes</span></div>
+    <div class="logo" style="display:flex;flex-direction:column;gap:1px;">
+      <span>AEIRAB - Amphi blanc</span>
+      <span style="font-size:9px;color:var(--text3);font-weight:400;letter-spacing:0.02em;">Julianne, Elliot et Etienne</span>
+    </div>
     <img id="logo-in-bar" src="" alt="Logo" />
     <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;">
       <span class="loader" id="sync-loader" style="display:none;"></span>
@@ -242,12 +245,12 @@
             style="text-align:center;letter-spacing:6px;font-family:'DM Mono',monospace;"
             onkeydown="if(event.key==='Enter')tryStudentPin()" />
         </div>
-        <button class="btn btn-blue" onclick="tryStudentPin()" style="width:100%;justify-content:center;margin-top:4px;" id="pin-enter-btn" disabled>Accéder à mes vœux</button>
-        <div class="status err" id="student-pin-err"></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:12px;justify-content:center;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;justify-content:center;">
           <input type="checkbox" id="stay-logged-in" style="width:auto;height:16px;accent-color:var(--blue);cursor:pointer;" />
           <label for="stay-logged-in" style="font-size:13px;color:var(--text2);text-transform:none;letter-spacing:0;margin:0;cursor:pointer;">Rester connecté sur cet appareil</label>
         </div>
+        <button class="btn btn-blue" onclick="tryStudentPin()" style="width:100%;justify-content:center;" id="pin-enter-btn" disabled>Accéder à mes vœux</button>
+        <div class="status err" id="student-pin-err"></div>
         <div style="margin-top:1rem;">
           <button class="btn btn-sm" onclick="showScreen('screen-lock')">← Retour</button>
         </div>
