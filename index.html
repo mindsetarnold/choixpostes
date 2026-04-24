@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Choix de postes — Promotion 50 (Bac à sable)</title>
+<title>Choix de postes — Promotion 50</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
@@ -193,10 +193,10 @@
 <div class="page">
   <div class="logo-bar">
     <div class="logo" style="display:flex;flex-direction:column;gap:1px;">
-      <span>Association des élèves de l'IRA de Bastia</span>
+      <span>AMPHI BLANC</span>
+      <span style="font-size:11px;color:var(--text3);font-weight:400;letter-spacing:0.02em;">AEIRAB</span>
     </div>
     <img id="logo-in-bar" src="" alt="Logo" />
-    <span style="font-size:11px;font-weight:600;color:#8A5A0A;background:#FDF0D5;border:1px solid #e8c87a;border-radius:99px;padding:2px 10px;letter-spacing:0.04em;">BAC À SABLE</span>
     <div style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:6px;">
       <span class="loader" id="sync-loader" style="display:none;"></span>
       <span id="sync-label">—</span>
@@ -442,8 +442,8 @@
           <div id="panel-sidebar">
             <div class="panel">
               <div class="panel-header">
-                <div class="panel-title">Choix en V1 par poste</div>
-                <div class="panel-subtitle">Nombre de fois choisi — cliquez pour réduire/ouvrir</div>
+                <div class="panel-title">Postes disponibles (V1)</div>
+                <div class="panel-subtitle">Selon votre rang — cliquez pour réduire/ouvrir</div>
               </div>
               <div id="panel-body"><div class="empty" style="padding:1.5rem;font-size:12px;">Chargement…</div></div>
             </div>
@@ -710,16 +710,13 @@ function remainingV1(postGroupName, rank) {
 }
 
 function isEvictedV1(choice) {
-  return false; // BAC À SABLE : jamais évincé
+  if (!choice.v1) return false;
+  const name = postName(choice.v1);
+  return remainingV1(name, choice.rank) === 0;
 }
 
 function postName(id) {
   return posts.find(p => p.id === id)?.name || '';
-}
-
-// Nombre total d'élèves ayant choisi ce nom de poste en V1 (bac à sable)
-function v1ChosenCount(postGroupName) {
-  return choices.filter(c => c.v1 && postName(c.v1) === postGroupName).length;
 }
 
 // Retrouve un ID représentatif pour un nom de poste (le premier exemplaire)
@@ -767,7 +764,7 @@ function buildVoeuxForm() {
           <option value="">— Vœu ${i}${i===1?' (prioritaire)':'  (optionnel)'} —</option>
         </select>
       </div>`;
-      if (i === 1) html += `<div class="voeu-hint">Bac à sable : tous les postes sont disponibles en vœu 1, sans restriction.</div>`;
+      if (i === 1) html += `<div class="voeu-hint">Seuls les postes avec des exemplaires disponibles en vœu 1 apparaissent ici.</div>`;
     }
     container.innerHTML = html;
   }
@@ -787,19 +784,22 @@ function fillAllSelects(rank) {
     return s;
   };
 
-  // ── V1 BAC À SABLE : tous les postes disponibles, aucune restriction ──
+  // ── V1 : postes disponibles (reste > 0), sans exclusion inter-vœux
   const sel1 = document.getElementById('post-select-1');
   sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
   const seenV1 = new Set();
   posts.forEach(p => {
     if (seenV1.has(p.name)) return;
     seenV1.add(p.name);
-    const count = v1ChosenCount(p.name);
+    const remaining = remainingV1(p.name, rank);
+    if (remaining === 0) return;
+    const total = totalByName(p.name);
     const o = document.createElement('option');
     o.value = p.id;
-    o.textContent = p.name + (count > 0 ? ` — choisi ${count} fois` : '');
+    o.textContent = p.name + (total > 1 ? ` — reste ${remaining} poste${remaining>1?'s':''}` : '');
     sel1.appendChild(o);
   });
+  // Restaurer depuis pendingVoeux (par nom)
   restoreSelectByName(sel1, pendingVoeux.v1 || '');
 
   // ── V2-V5 : tous les postes, exclusion de ceux dans les autres vœux
@@ -846,24 +846,35 @@ function updateSelectLabelsAndAlerts() {
   const rank = currentStudentRank;
   if (!rank) return;
 
-  // V1 BAC À SABLE : mise à jour des labels (décomptes choisis) sans blocage
+  // Mettre à jour les labels de V1 (décomptes restants peuvent avoir changé)
   const sel1 = document.getElementById('post-select-1');
   if (sel1) {
-    const currentName = postName(sel1.value);
+    const currentVal = sel1.value;
+    const currentName = postName(currentVal);
+    // Reconstruire les options de V1 (décomptes)
     sel1.innerHTML = '<option value="">— Vœu 1 (prioritaire) —</option>';
     const seenV1 = new Set();
     posts.forEach(p => {
       if (seenV1.has(p.name)) return;
       seenV1.add(p.name);
-      const count = v1ChosenCount(p.name);
+      const remaining = remainingV1(p.name, rank);
+      if (remaining === 0) return;
+      const total = totalByName(p.name);
       const o = document.createElement('option');
       o.value = p.id;
-      o.textContent = p.name + (count > 0 ? ` — choisi ${count} fois` : '');
+      o.textContent = p.name + (total > 1 ? ` — reste ${remaining} poste${remaining>1?'s':''}` : '');
       sel1.appendChild(o);
     });
-    if (currentName) restoreSelectByName(sel1, currentName);
+    // Restaurer la sélection par nom
+    if (currentName) {
+      restoreSelectByName(sel1, currentName);
+      // Si le poste n'est plus disponible, vider et mettre à jour pendingVoeux
+      if (!sel1.value) {
+        pendingVoeux.v1 = '';
+      }
+    }
   }
-  // Pas d'alerte V1 en mode bac à sable
+  updateV1Alert(rank);
 }
 
 // ════════════════════════════════════════════════════════
@@ -891,9 +902,19 @@ function onVoeuChange(voeuNum) {
 }
 
 function updateV1Alert(rank) {
-  // BAC À SABLE : pas d'alerte V1, le choix est toujours libre
   const alertV1 = document.getElementById('alert-v1-evicted');
-  if (alertV1) alertV1.style.display = 'none';
+  if (!alertV1) return;
+  const v1Name = pendingVoeux.v1 || '';
+  const saved = choices.find(c => c.rank === rank);
+  const savedV1Name = saved ? postName(saved.v1) : '';
+
+  // Alerte si le V1 SAUVEGARDÉ (en Firebase) n'est plus disponible
+  if (savedV1Name && remainingV1(savedV1Name, rank) === 0) {
+    alertV1.style.display = '';
+    alertV1.innerHTML = `⚠️ <strong>Votre vœu 1 "${esc(savedV1Name)}" n'est plus disponible</strong> : tous les exemplaires ont été pris en vœu 1 par des élèves mieux classés. Veuillez choisir un nouveau vœu 1.`;
+  } else {
+    alertV1.style.display = 'none';
+  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -906,7 +927,12 @@ async function submitChoice() {
 
   const v1Name = pendingVoeux.v1;
   if (!v1Name) { status.textContent='Le vœu 1 est obligatoire.'; status.className='status err'; return; }
-  // BAC À SABLE : aucune vérification de disponibilité en V1
+  if (remainingV1(v1Name, rank) === 0) {
+    status.textContent='Ce poste n\'est plus disponible en vœu 1. Veuillez en choisir un autre.';
+    status.className='status err';
+    updateSelectLabelsAndAlerts();
+    return;
+  }
 
   const student = students.find(s=>s.rank===rank);
   if (!student) return;
@@ -1102,21 +1128,25 @@ function renderRecapTable(containerId) {
   });
   const vHeaders = [...Array(NB_VOEUX)].map((_,i)=>`<th style="text-align:center;">V${i+1}</th>`).join('');
   const dataRows = rows.map(r => {
+    const rowTotal = r.counts.reduce((s,n)=>s+n, 0);
     const cells = r.counts.map(n=>`<td class="num${n===0?' num-zero':''}">${n>0?n:'—'}</td>`).join('');
-    return `<tr><td style="font-size:11px;color:var(--text2);">${esc(r.univers)}</td><td style="font-size:11px;color:var(--text2);">${esc(r.sousGroupe)}</td><td>${esc(r.name)}</td>${cells}</tr>`;
+    const totalCell = `<td class="num" style="font-weight:600;border-left:1px solid var(--border2);">${rowTotal>0?rowTotal:'—'}</td>`;
+    return `<tr><td style="font-size:11px;color:var(--text2);">${esc(r.univers)}</td><td style="font-size:11px;color:var(--text2);">${esc(r.sousGroupe)}</td><td>${esc(r.name)}</td>${cells}${totalCell}</tr>`;
   }).join('');
   const totals = Array(NB_VOEUX).fill(0);
   rows.forEach(r=>r.counts.forEach((n,i)=>{totals[i]+=n;}));
+  const grandTotal = totals.reduce((s,n)=>s+n, 0);
   const totalCells = totals.map(n=>`<td class="num">${n}</td>`).join('');
-  const totalRow = `<tr class="total-row"><td colspan="3" style="font-size:12px;">Total</td>${totalCells}</tr>`;
-  el.innerHTML = `<div style="overflow-x:auto;"><table class="zebra"><thead><tr><th>Univers</th><th>Sous-groupe</th><th>Poste</th>${vHeaders}</tr></thead><tbody>${dataRows}${totalRow}</tbody></table></div>`;
+  const grandTotalCell = `<td class="num" style="font-weight:700;border-left:1px solid var(--border2);">${grandTotal}</td>`;
+  const totalRow = `<tr class="total-row"><td colspan="3" style="font-size:12px;">Total</td>${totalCells}${grandTotalCell}</tr>`;
+  el.innerHTML = `<div style="overflow-x:auto;"><table class="zebra"><thead><tr><th>Univers</th><th>Sous-groupe</th><th>Poste</th>${vHeaders}<th style="text-align:center;border-left:1px solid var(--border2);">Total</th></tr></thead><tbody>${dataRows}${totalRow}</tbody></table></div>`;
 }
 
 function exportRecapCSV() {
   const rows = buildRecapData('');
   rows.sort((a,b)=>{if(a.univers!==b.univers)return a.univers.localeCompare(b.univers);if(a.sousGroupe!==b.sousGroupe)return a.sousGroupe.localeCompare(b.sousGroupe);return a.name.localeCompare(b.name);});
-  const headers=['Univers','Sous-groupe','Poste',...[...Array(NB_VOEUX)].map((_,i)=>`Vœu ${i+1}`)];
-  const csvRows=[headers,...rows.map(r=>[r.univers,r.sousGroupe,r.name,...r.counts])];
+  const headers=['Univers','Sous-groupe','Poste',...[...Array(NB_VOEUX)].map((_,i)=>`Vœu ${i+1}`),'Total'];
+  const csvRows=[headers,...rows.map(r=>[r.univers,r.sousGroupe,r.name,...r.counts,r.counts.reduce((s,n)=>s+n,0)])];
   const csv=csvRows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);
@@ -1138,18 +1168,18 @@ function renderSidebar(rank) {
   posts.forEach(p => {
     const u=p.univers||'Autre', sg=p.sousGroupe||'Autre';
     if (!tree[u]) tree[u]={};
-    if (!tree[u][sg]) tree[u][sg]={total:0,chosen:0};
+    if (!tree[u][sg]) tree[u][sg]={total:0,remaining:0};
     const key=u+'||'+sg+'||'+p.name;
     if (!seenNames[key]) {
       seenNames[key]=true;
       tree[u][sg].total+=totalByName(p.name);
-      tree[u][sg].chosen+=v1ChosenCount(p.name);
+      tree[u][sg].remaining+=remainingV1(p.name,rank);
     }
   });
   let html='';
   Object.keys(tree).sort().forEach(u => {
     const sgs=tree[u];
-    const totalChosen=Object.values(sgs).reduce((s,v)=>s+v.chosen,0);
+    const totalRemaining=Object.values(sgs).reduce((s,v)=>s+v.remaining,0);
     const totalAll=Object.values(sgs).reduce((s,v)=>s+v.total,0);
     const color=UNIVERS_COLORS[u]||'#5F5E5A', bgColor=UNIVERS_BG[u]||'#EDEAE3';
     const isOpen=sessionStorage.getItem('panel_open_'+u)!=='false';
@@ -1157,21 +1187,21 @@ function renderSidebar(rank) {
       <button class="univers-header" onclick="toggleUnivers('${esc(u)}')">
         <span class="univers-name" style="color:${color};">${esc(u)}</span>
         <span style="display:flex;align-items:center;gap:6px;">
-          <span class="univers-total" style="background:${bgColor};color:${color};">V1 : ${totalChosen}/${totalAll}</span>
+          <span class="univers-total" style="background:${bgColor};color:${color};">dispos : ${totalRemaining}/${totalAll}</span>
           <span class="univers-chevron${isOpen?' open':''}" id="chev-${esc(u)}">▼</span>
         </span>
       </button>
       <div class="univers-body" id="ubody-${esc(u)}" style="display:${isOpen?'block':'none'};">`;
     Object.keys(sgs).sort().forEach(sg => {
-      const {chosen,total}=sgs[sg];
-      // Jauge : proportion de postes choisis en V1 (bac à sable)
-      const pct=total>0?Math.min(100,Math.round((chosen/total)*100)):0;
-      html+=`<div class="sg-row">
+      const {remaining,total}=sgs[sg];
+      const pct=total>0?Math.round((remaining/total)*100):0;
+      const zero=remaining===0;
+      html+=`<div class="sg-row${zero?' sg-zero':''}" >
         <div class="sg-label">
           <span class="sg-name" title="${esc(sg)}">${esc(sg)}</span>
-          <span class="sg-count">${chosen}/${total}</span>
+          <span class="sg-count">${remaining}/${total}</span>
         </div>
-        <div class="sg-bar-bg"><div class="sg-bar-fill" style="width:${pct}%;background:${chosen===0?'var(--surface2)':color};"></div></div>
+        <div class="sg-bar-bg"><div class="sg-bar-fill" style="width:${pct}%;background:${zero?'var(--surface2)':color};"></div></div>
       </div>`;
     });
     html+='</div></div>';
