@@ -274,17 +274,6 @@
       <button class="tab" onclick="switchAdminTab('tab-recap',this)">Récapitulatif</button>
       <button class="tab" onclick="switchAdminTab('tab-settings',this)">Paramètres</button>
     </div>
-<div id="tab-recap" class="admin-tab">
-  <div class="table-wrap recap-table">
-    <div class="table-head">
-      <span class="table-head-title">Récapitulatif des vœux par poste</span>
-      <input type="text" placeholder="Rechercher…" style="width:180px;height:30px;font-size:12px;" oninput="renderRecapTable('admin-recap-body')" />
-    </div>
-    <div id="admin-recap-body">
-      <div class="empty">Chargement…</div>
-    </div>
-  </div>
-</div>
 
     <!-- Tab Élèves -->
     <div id="tab-students" class="admin-tab" style="display:block;">
@@ -335,13 +324,10 @@
         <div class="stat"><div class="stat-label">En attente</div><div class="stat-value" id="adm-waiting">—</div></div>
       </div>
       <div class="table-wrap">
-	<div class="table-head">
-  		<span class="table-head-title">Tous les vœux</span>
- 		<div class="flex-gap">
-    			<button class="btn btn-blue btn-sm" onclick="exportCSV()">Exporter CSV</button>
-    			<input type="text" id="adm-search" placeholder="Nom ou rang (ex: 14)…"
-  		</div>
-	</div>       
+        <div class="table-head">
+          <span class="table-head-title">Tous les vœux</span>
+          <div class="flex-gap">
+            <input type="text" id="adm-search" placeholder="Nom ou rang (ex: 14)…" style="width:200px;height:30px;font-size:12px;" oninput="renderChoicesTable()" />
           </div>
         </div>
         <div id="choices-table"><div class="empty">Aucun vœu enregistré.</div></div>
